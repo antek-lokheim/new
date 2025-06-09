@@ -5,7 +5,6 @@ import "./globals.css"
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import { ThemeProvider } from "@/components/theme-provider"
-import AosInit from "@/components/aos-init"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -33,7 +32,6 @@ export default function RootLayout({
     <html lang="id" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider defaultTheme="system" storageKey="koleksiqyu-ui-theme">
-          <AosInit />
           <Navbar />
           <main>{children}</main>
           <Footer />

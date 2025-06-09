@@ -6,6 +6,7 @@ import { formatPrice } from "@/lib/utils"
 import { Star, ShoppingCart, Heart, Share2, Eye, Check } from "lucide-react"
 import { notFound } from "next/navigation"
 import PreviewModal from "@/components/preview-modal"
+import AnimatedSection from "@/components/AnimatedSection"
 
 export default function ProductDetailPage({
   params,
@@ -25,21 +26,22 @@ export default function ProductDetailPage({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
             {/* Product Image */}
-            <div
+            <AnimatedSection
+              animation="fade-right"
               className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-8 shadow-lg border border-gray-200 dark:border-gray-700"
-              data-aos="fade-right"
             >
               <img
                 src={product.imageUrl || "/placeholder.svg"}
                 alt={product.name}
                 className="w-full h-auto rounded-lg"
               />
-            </div>
+            </AnimatedSection>
 
             {/* Product Info */}
-            <div
+            <AnimatedSection
+              animation="fade-left"
+              delay={200}
               className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-8 shadow-lg border border-gray-200 dark:border-gray-700"
-              data-aos="fade-left"
             >
               <div className="mb-3 sm:mb-4">
                 <span className="bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full text-xs sm:text-sm font-semibold">
@@ -83,7 +85,7 @@ export default function ProductDetailPage({
               </p>
 
               {/* Features */}
-              <div className="mb-6 sm:mb-8" data-aos="fade-up">
+              <AnimatedSection animation="fade-up" delay={400} className="mb-6 sm:mb-8">
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4 text-sm sm:text-base">
                   Fitur Template:
                 </h3>
@@ -98,9 +100,9 @@ export default function ProductDetailPage({
                     </li>
                   ))}
                 </ul>
-              </div>
+              </AnimatedSection>
 
-              <div className="flex flex-col gap-3 sm:gap-4 mb-6 sm:mb-8" data-aos="fade-up">
+              <AnimatedSection animation="fade-up" delay={600} className="flex flex-col gap-3 sm:gap-4 mb-6 sm:mb-8">
                 <button
                   onClick={() => setIsPreviewOpen(true)}
                   className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all flex items-center justify-center gap-2 font-semibold text-sm sm:text-base shadow-lg"
@@ -122,9 +124,13 @@ export default function ProductDetailPage({
                     Bagikan
                   </button>
                 </div>
-              </div>
+              </AnimatedSection>
 
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-6 sm:pt-8" data-aos="fade-up">
+              <AnimatedSection
+                animation="fade-up"
+                delay={800}
+                className="border-t border-gray-200 dark:border-gray-700 pt-6 sm:pt-8"
+              >
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4 text-sm sm:text-base">
                   Yang Anda Dapatkan:
                 </h3>
@@ -135,8 +141,8 @@ export default function ProductDetailPage({
                   <li>✓ Tutorial lengkap customisasi</li>
                   <li>✓ Support 24/7 via WhatsApp</li>
                 </ul>
-              </div>
-            </div>
+              </AnimatedSection>
+            </AnimatedSection>
           </div>
         </div>
       </div>

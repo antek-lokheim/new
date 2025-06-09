@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { ArrowRight, Play, Sparkles } from "lucide-react"
+import AnimatedSection from "./AnimatedSection"
 
 export default function Hero() {
   return (
@@ -7,7 +8,7 @@ export default function Hero() {
       <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-          <div data-aos="fade-right">
+          <AnimatedSection animation="fade-right">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-xs sm:text-sm font-medium mb-4 sm:mb-6">
               <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
               Template Undangan Digital Terbaik
@@ -35,19 +36,21 @@ export default function Hero() {
                 Lihat Demo
               </button>
             </div>
-          </div>
-          <div className="relative" data-aos="fade-left">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-4 sm:p-8 border border-gray-200 dark:border-gray-700">
-              <img
-                src="/placeholder.svg?height=400&width=600"
-                alt="Template Preview"
-                className="w-full h-auto rounded-lg"
-              />
+          </AnimatedSection>
+          <AnimatedSection animation="fade-left" delay={200}>
+            <div className="relative">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-4 sm:p-8 border border-gray-200 dark:border-gray-700">
+                <img
+                  src="/placeholder.svg?height=400&width=600"
+                  alt="Template Preview"
+                  className="w-full h-auto rounded-lg"
+                />
+              </div>
+              <div className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-1 sm:px-4 sm:py-2 rounded-full font-semibold text-xs sm:text-sm shadow-lg">
+                Terbaru!
+              </div>
             </div>
-            <div className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-1 sm:px-4 sm:py-2 rounded-full font-semibold text-xs sm:text-sm shadow-lg">
-              Terbaru!
-            </div>
-          </div>
+          </AnimatedSection>
         </div>
       </div>
     </section>
