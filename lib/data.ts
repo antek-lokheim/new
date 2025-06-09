@@ -13,6 +13,7 @@ export const products: Product[] = [
     reviews: 156,
     previewUrl: "https://elegant-rose-demo.vercel.app",
     features: ["Responsive Design", "Countdown Timer", "Galeri Foto", "Musik Background", "RSVP Form"],
+    featured: true,
   },
   {
     id: "2",
@@ -26,6 +27,7 @@ export const products: Product[] = [
     reviews: 203,
     previewUrl: "https://modern-minimalist-demo.vercel.app",
     features: ["Clean Design", "Fast Loading", "SEO Optimized", "Mobile First", "Easy Customization"],
+    featured: true,
   },
   {
     id: "3",
@@ -39,6 +41,7 @@ export const products: Product[] = [
     reviews: 89,
     previewUrl: "https://vintage-classic-demo.vercel.app",
     features: ["Vintage Ornaments", "Luxury Feel", "Custom Fonts", "Story Timeline", "Guest Book"],
+    featured: false,
   },
   {
     id: "4",
@@ -52,6 +55,7 @@ export const products: Product[] = [
     reviews: 134,
     previewUrl: "https://floral-garden-demo.vercel.app",
     features: ["Floral Animations", "Nature Theme", "Interactive Map", "Weather Widget", "Social Media Integration"],
+    featured: true,
   },
   {
     id: "5",
@@ -65,6 +69,7 @@ export const products: Product[] = [
     reviews: 67,
     previewUrl: "https://royal-gold-demo.vercel.app",
     features: ["Gold Accents", "Luxury Design", "Premium Animations", "VIP Features", "Custom Domain"],
+    featured: false,
   },
   {
     id: "6",
@@ -78,6 +83,7 @@ export const products: Product[] = [
     reviews: 98,
     previewUrl: "https://beach-sunset-demo.vercel.app",
     features: ["Beach Theme", "Sunset Colors", "Wave Animations", "Location Guide", "Weather Forecast"],
+    featured: true,
   },
 ]
 

@@ -1,12 +1,32 @@
 "use client"
 
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Menu, X, ShoppingCart, Heart } from "lucide-react"
 import { ThemeToggle } from "./theme-toggle"
+import { usePathname } from "next/navigation"
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
+  const pathname = usePathname()
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsOpen(false)
+  }, [pathname])
+
+  const scrollToSection = (sectionId: string) => {
+    if (pathname !== "/") {
+      // If not on homepage, navigate to homepage with hash
+      window.location.href = `/#${sectionId}`
+      return
+    }
+
+    const section = document.getElementById(sectionId)
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" })
+    }
+  }
 
   return (
     <nav className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm sticky top-0 z-40 border-b border-gray-200 dark:border-gray-700">
@@ -34,24 +54,24 @@ export default function Navbar() {
             >
               Template
             </Link>
-            <Link
-              href="#features"
+            <button
+              onClick={() => scrollToSection("features")}
               className="text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
               Fitur
-            </Link>
-            <Link
-              href="#pricing"
+            </button>
+            <button
+              onClick={() => scrollToSection("pricing")}
               className="text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
               Harga
-            </Link>
-            <Link
-              href="#testimonials"
+            </button>
+            <button
+              onClick={() => scrollToSection("testimonials")}
               className="text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
               Testimoni
-            </Link>
+            </button>
             <div className="flex items-center gap-2">
               <ThemeToggle />
               <button className="p-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
@@ -83,38 +103,33 @@ export default function Navbar() {
               <Link
                 href="/"
                 className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-                onClick={() => setIsOpen(false)}
               >
                 Beranda
               </Link>
               <Link
                 href="/products"
                 className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-                onClick={() => setIsOpen(false)}
               >
                 Template
               </Link>
-              <Link
-                href="#features"
-                className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-                onClick={() => setIsOpen(false)}
+              <button
+                onClick={() => scrollToSection("features")}
+                className="block w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
               >
                 Fitur
-              </Link>
-              <Link
-                href="#pricing"
-                className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-                onClick={() => setIsOpen(false)}
+              </button>
+              <button
+                onClick={() => scrollToSection("pricing")}
+                className="block w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
               >
                 Harga
-              </Link>
-              <Link
-                href="#testimonials"
-                className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-                onClick={() => setIsOpen(false)}
+              </button>
+              <button
+                onClick={() => scrollToSection("testimonials")}
+                className="block w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
               >
                 Testimoni
-              </Link>
+              </button>
               <div className="flex gap-2 px-3 py-2">
                 <button className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all flex items-center justify-center gap-2 text-sm">
                   <ShoppingCart className="w-4 h-4" />

@@ -21,11 +21,14 @@ export default function ProductDetailPage({
 
   return (
     <>
-      <div className="py-8 sm:py-20 bg-gray-50 dark:bg-gray-900 min-h-screen">
+      <div className="py-8 sm:py-20 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
             {/* Product Image */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-8 shadow-lg border border-gray-200 dark:border-gray-700">
+            <div
+              className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-8 shadow-lg border border-gray-200 dark:border-gray-700"
+              data-aos="fade-right"
+            >
               <img
                 src={product.imageUrl || "/placeholder.svg"}
                 alt={product.name}
@@ -34,7 +37,10 @@ export default function ProductDetailPage({
             </div>
 
             {/* Product Info */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-8 shadow-lg border border-gray-200 dark:border-gray-700">
+            <div
+              className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-8 shadow-lg border border-gray-200 dark:border-gray-700"
+              data-aos="fade-left"
+            >
               <div className="mb-3 sm:mb-4">
                 <span className="bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full text-xs sm:text-sm font-semibold">
                   {product.category}
@@ -77,7 +83,7 @@ export default function ProductDetailPage({
               </p>
 
               {/* Features */}
-              <div className="mb-6 sm:mb-8">
+              <div className="mb-6 sm:mb-8" data-aos="fade-up">
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4 text-sm sm:text-base">
                   Fitur Template:
                 </h3>
@@ -94,7 +100,7 @@ export default function ProductDetailPage({
                 </ul>
               </div>
 
-              <div className="flex flex-col gap-3 sm:gap-4 mb-6 sm:mb-8">
+              <div className="flex flex-col gap-3 sm:gap-4 mb-6 sm:mb-8" data-aos="fade-up">
                 <button
                   onClick={() => setIsPreviewOpen(true)}
                   className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all flex items-center justify-center gap-2 font-semibold text-sm sm:text-base shadow-lg"
@@ -118,7 +124,7 @@ export default function ProductDetailPage({
                 </div>
               </div>
 
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-6 sm:pt-8">
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-6 sm:pt-8" data-aos="fade-up">
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4 text-sm sm:text-base">
                   Yang Anda Dapatkan:
                 </h3>

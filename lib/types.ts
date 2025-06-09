@@ -9,6 +9,7 @@ export interface Product {
   reviews: number
   previewUrl: string
   features: string[]
+  featured?: boolean
 }
 
 export interface Testimonial {
