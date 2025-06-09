@@ -70,6 +70,23 @@ export default function CheckoutPage() {
     window.dispatchEvent(new Event("wishlistUpdated"))
   }
 
+  const handleMoveToCart = (productId: string) => {
+    const itemToMove = wishlistItems.find((item) => item.productId === productId)
+    if (itemToMove) {
+      addToCart(productId)
+      removeFromWishlist(productId)
+      // Update local states
+      setCartItems((prevCart) => [
+        ...prevCart,
+        { productId: itemToMove.productId, selectedPlan: "", product: itemToMove.product, plan: null },
+      ])
+      setWishlistItems((prevWishlist) => prevWishlist.filter((w) => w.productId !== productId))
+      // Dispatch events
+      window.dispatchEvent(new Event("cartUpdated"))
+      window.dispatchEvent(new Event("wishlistUpdated"))
+    }
+  }
+
   const handlePlanChange = (productId: string, planId: string) => {
     updateCartItemPlan(productId, planId)
 
@@ -160,7 +177,7 @@ export default function CheckoutPage() {
               <AnimatedSection animation="fade-up" delay={200}>
                 <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
                   <div className="flex items-center gap-2 mb-6">
-                    <ShoppingCart className="w-5 h-5 text-blue-600" />
+                    <ShoppingCart className="w-5 h-5 text-brand-indigo" />
                     <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                       Keranjang ({cartItems.length})
                     </h2>
@@ -209,7 +226,7 @@ export default function CheckoutPage() {
                                 key={plan.id}
                                 className={`flex items-center p-3 border rounded-lg cursor-pointer transition-colors ${
                                   item.selectedPlan === plan.id
-                                    ? "border-blue-600 bg-blue-50 dark:bg-blue-900/20"
+                                    ? "border-brand-indigo bg-brand-indigo-light dark:bg-brand-indigo/20"
                                     : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
                                 }`}
                               >
@@ -224,7 +241,7 @@ export default function CheckoutPage() {
                                 <div className="flex-1">
                                   <div className="flex items-center justify-between">
                                     <span className="font-medium text-gray-900 dark:text-white">{plan.name}</span>
-                                    <span className="font-bold text-blue-600 dark:text-blue-400">
+                                    <span className="font-bold text-brand-indigo dark:text-brand-indigo-light">
                                       {formatPrice(plan.price)}
                                     </span>
                                   </div>
@@ -243,7 +260,7 @@ export default function CheckoutPage() {
                   <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-6">
                     <div className="flex justify-between items-center">
                       <span className="text-lg font-semibold text-gray-900 dark:text-white">Total:</span>
-                      <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                      <span className="text-2xl font-bold bg-gradient-to-r from-brand-pink to-brand-indigo bg-clip-text text-transparent">
                         {formatPrice(getTotalPrice())}
                       </span>
                     </div>
@@ -266,48 +283,36 @@ export default function CheckoutPage() {
                     {wishlistItems.map((item) => (
                       <div
                         key={item.productId}
-                        className="flex gap-4 p-4 border border-gray-200 dark:border-gray-700 rounded-lg"
+                        className="flex flex-col sm:flex-row gap-4 p-4 border border-gray-200 dark:border-gray-700 rounded-lg items-center sm:items-start"
                       >
                         <img
                           src={item.product?.imageUrl || "/placeholder.svg"}
                           alt={item.product?.name}
-                          className="w-16 h-16 object-cover rounded-lg"
+                          className="w-20 h-20 object-cover rounded-lg flex-shrink-0"
                         />
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-gray-900 dark:text-white">{item.product?.name}</h3>
+                        <div className="flex-1 text-center sm:text-left">
+                          <h3 className="font-semibold text-gray-900 dark:text-white text-lg">{item.product?.name}</h3>
                           <p className="text-sm text-gray-600 dark:text-gray-300 capitalize">
                             Tema: {item.product?.theme}
                           </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                             Ditambahkan: {new Date(item.addedAt).toLocaleDateString("id-ID")}
                           </p>
                         </div>
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col sm:flex-row gap-2 mt-4 sm:mt-0 sm:ml-auto">
                           <button
-                            onClick={() => {
-                              // Add to cart
-                              addToCart(item.productId)
-                              // Remove from wishlist
-                              removeFromWishlist(item.productId)
-                              // Update local states
-                              setCartItems([
-                                ...cartItems,
-                                { productId: item.productId, selectedPlan: "", product: item.product, plan: null },
-                              ])
-                              setWishlistItems(wishlistItems.filter((w) => w.productId !== item.productId))
-                              // Dispatch events
-                              window.dispatchEvent(new Event("cartUpdated"))
-                              window.dispatchEvent(new Event("wishlistUpdated"))
-                            }}
-                            className="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700 transition-colors"
+                            onClick={() => handleMoveToCart(item.productId)}
+                            className="bg-brand-indigo text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-indigo/90 transition-colors flex items-center justify-center gap-1"
                           >
+                            <ShoppingCart className="w-4 h-4" />
                             Pindah ke Keranjang
                           </button>
                           <button
                             onClick={() => handleRemoveFromWishlist(item.productId)}
-                            className="text-red-500 hover:text-red-700 p-1"
+                            className="text-red-500 hover:text-red-700 p-2 flex items-center justify-center"
                           >
                             <Trash2 className="w-4 h-4" />
+                            <span className="sr-only">Hapus dari Wishlist</span>
                           </button>
                         </div>
                       </div>
@@ -329,7 +334,7 @@ export default function CheckoutPage() {
                   </p>
                   <a
                     href="/products"
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all inline-flex items-center gap-2"
+                    className="bg-gradient-to-r from-brand-pink to-brand-indigo text-white px-6 py-3 rounded-lg hover:from-brand-pink/90 hover:to-brand-indigo/90 transition-all inline-flex items-center gap-2"
                   >
                     Lihat Template
                   </a>
@@ -353,7 +358,7 @@ export default function CheckoutPage() {
                       type="text"
                       value={customerName}
                       onChange={(e) => setCustomerName(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-indigo focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       placeholder="Masukkan nama lengkap"
                     />
                   </div>
@@ -366,7 +371,7 @@ export default function CheckoutPage() {
                       type="tel"
                       value={customerPhone}
                       onChange={(e) => setCustomerPhone(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-indigo focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                       placeholder="08xxxxxxxxxx"
                     />
                   </div>

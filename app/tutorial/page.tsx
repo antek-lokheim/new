@@ -82,11 +82,13 @@ export default function TutorialPage() {
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 hover:-translate-y-1">
                 <div className="p-6">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
-                      <tutorial.icon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                    <div className="bg-brand-indigo-light dark:bg-brand-indigo/30 p-2 rounded-lg">
+                      <tutorial.icon className="w-5 h-5 text-brand-indigo dark:text-brand-indigo-light" />
                     </div>
                     <div>
-                      <span className="text-xs font-medium text-blue-600 dark:text-blue-400">{tutorial.category}</span>
+                      <span className="text-xs font-medium text-brand-indigo dark:text-brand-indigo-light">
+                        {tutorial.category}
+                      </span>
                       <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">• {tutorial.time}</span>
                     </div>
                   </div>
@@ -94,7 +96,7 @@ export default function TutorialPage() {
                   <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">{tutorial.description}</p>
                   <Link
                     href={`/tutorial/${tutorial.id}`}
-                    className="inline-flex items-center text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
+                    className="inline-flex items-center text-sm font-medium text-brand-indigo dark:text-brand-indigo-light hover:text-brand-indigo/90 dark:hover:text-brand-indigo-light/90"
                   >
                     Baca Tutorial
                     <ArrowRight className="w-4 h-4 ml-1" />
@@ -121,7 +123,7 @@ export default function TutorialPage() {
               </Link>
               <Link
                 href="/bantuan"
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all"
+                className="bg-gradient-to-r from-brand-pink to-brand-indigo text-white px-6 py-3 rounded-lg hover:from-brand-pink/90 hover:to-brand-indigo/90 transition-all"
               >
                 Hubungi Support
               </Link>

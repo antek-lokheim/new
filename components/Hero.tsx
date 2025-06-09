@@ -21,19 +21,19 @@ export default function Hero() {
   }, [])
 
   return (
-    <section className="relative bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 py-12 sm:py-20 overflow-hidden">
+    <section className="relative bg-gradient-to-br from-brand-pink-light via-white to-brand-indigo-light dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 py-12 sm:py-20 overflow-hidden">
       <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* Mobile layout (column) */}
         <div className="flex flex-col gap-8 md:hidden">
           <AnimatedSection animation="fade-up">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-xs sm:text-sm font-medium mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-brand-indigo-light dark:bg-brand-indigo/30 text-brand-indigo dark:text-brand-indigo-light rounded-full text-xs sm:text-sm font-medium mb-4">
               <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
               Template Undangan Digital Terbaik
             </div>
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4 leading-tight">
               Undangan Pernikahan
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent block">
+              <span className="bg-gradient-to-r from-brand-pink to-brand-indigo bg-clip-text text-transparent block">
                 Digital Terbaik
               </span>
             </h1>
@@ -60,7 +60,7 @@ export default function Hero() {
                   />
                 )}
               </div>
-              <div className="absolute -top-2 -right-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-1 rounded-full font-semibold text-xs shadow-lg">
+              <div className="absolute -top-2 -right-2 bg-gradient-to-r from-brand-pink to-brand-indigo text-white px-3 py-1 rounded-full font-semibold text-xs shadow-lg">
                 Terbaru!
               </div>
             </div>
@@ -70,7 +70,7 @@ export default function Hero() {
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 href="/products"
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all flex items-center justify-center gap-2 font-semibold text-sm sm:text-base shadow-lg hover:shadow-xl"
+                className="bg-gradient-to-r from-brand-pink to-brand-indigo text-white px-6 py-3 rounded-lg hover:from-brand-pink/90 hover:to-brand-indigo/90 transition-all flex items-center justify-center gap-2 font-semibold text-sm sm:text-base shadow-lg hover:shadow-xl"
               >
                 Lihat Template
                 <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -94,13 +94,13 @@ export default function Hero() {
         <div className="hidden md:grid md:grid-cols-2 md:gap-16 md:items-center md:min-h-[600px]">
           {/* Text Content - Left Side */}
           <AnimatedSection animation="fade-right" className="flex flex-col justify-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-brand-indigo-light dark:bg-brand-indigo/30 text-brand-indigo dark:text-brand-indigo-light rounded-full text-sm font-medium mb-6">
               <Sparkles className="w-4 h-4" />
               Template Undangan Digital Terbaik
             </div>
             <h1 className="text-4xl xl:text-5xl 2xl:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
               Undangan Pernikahan
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent block">
+              <span className="bg-gradient-to-r from-brand-pink to-brand-indigo bg-clip-text text-transparent block">
                 Digital Terbaik
               </span>
             </h1>
@@ -111,7 +111,7 @@ export default function Hero() {
             <div className="flex gap-4">
               <Link
                 href="/products"
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all flex items-center justify-center gap-2 font-semibold text-base shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="bg-gradient-to-r from-brand-pink to-brand-indigo text-white px-8 py-4 rounded-lg hover:from-brand-pink/90 hover:to-brand-indigo/90 transition-all flex items-center justify-center gap-2 font-semibold text-base shadow-lg hover:shadow-xl transform hover:scale-105"
               >
                 Lihat Template
                 <ArrowRight className="w-5 h-5" />
@@ -121,7 +121,7 @@ export default function Hero() {
                   href={featuredProduct.previewUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-8 py-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-all flex items-center justify-center gap-2 font-semibold text-base hover:border-blue-500 dark:hover:border-blue-400"
+                  className="border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-8 py-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-all flex items-center justify-center gap-2 font-semibold text-base hover:border-brand-indigo dark:hover:border-brand-indigo"
                 >
                   <Play className="w-5 h-5" />
                   Lihat Demo
@@ -148,12 +148,12 @@ export default function Hero() {
                   />
                 )}
               </div>
-              <div className="absolute -top-4 -right-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full font-semibold text-sm shadow-lg animate-pulse">
+              <div className="absolute -top-4 -right-4 bg-gradient-to-r from-brand-pink to-brand-indigo text-white px-4 py-2 rounded-full font-semibold text-sm shadow-lg animate-pulse">
                 Terbaru!
               </div>
               {/* Decorative elements */}
-              <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full opacity-20 blur-xl"></div>
-              <div className="absolute -top-8 -left-8 w-16 h-16 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full opacity-20 blur-xl"></div>
+              <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-gradient-to-r from-brand-purple-light to-brand-pink-light rounded-full opacity-20 blur-xl"></div>
+              <div className="absolute -top-8 -left-8 w-16 h-16 bg-gradient-to-r from-brand-indigo-light to-brand-pink-light rounded-full opacity-20 blur-xl"></div>
             </div>
           </AnimatedSection>
         </div>

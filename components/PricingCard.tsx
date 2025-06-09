@@ -19,12 +19,14 @@ export default function PricingCard({ plan }: PricingCardProps) {
     <div className="relative h-full flex flex-col mx-2 sm:mx-0">
       <div
         className={`flex-1 bg-white dark:bg-gray-800 rounded-2xl shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
-          plan.popular ? "border-2 border-blue-500 dark:border-blue-400" : "border border-gray-200 dark:border-gray-700"
+          plan.popular
+            ? "border-2 border-brand-indigo dark:border-brand-indigo-light"
+            : "border border-gray-200 dark:border-gray-700"
         }`}
       >
         {plan.popular && (
           <div className="absolute -top-3 left-0 w-full flex justify-center">
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-1 rounded-full flex items-center gap-1 text-xs font-semibold shadow-md">
+            <div className="bg-gradient-to-r from-brand-pink to-brand-indigo text-white px-4 py-1 rounded-full flex items-center gap-1 text-xs font-semibold shadow-md">
               <Star className="w-3 h-3" />
               Terpopuler
             </div>
@@ -34,7 +36,7 @@ export default function PricingCard({ plan }: PricingCardProps) {
         <div
           className={`px-6 pt-8 pb-6 text-center ${
             plan.popular
-              ? "bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-t-2xl"
+              ? "bg-gradient-to-br from-brand-pink-light to-brand-purple-light dark:from-brand-pink/20 dark:to-brand-purple/20 rounded-t-2xl"
               : ""
           }`}
         >
@@ -43,7 +45,7 @@ export default function PricingCard({ plan }: PricingCardProps) {
             <span
               className={`text-2xl sm:text-3xl font-bold ${
                 plan.popular
-                  ? "bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+                  ? "bg-gradient-to-r from-brand-pink to-brand-indigo bg-clip-text text-transparent"
                   : "text-gray-900 dark:text-white"
               }`}
             >
@@ -58,12 +60,14 @@ export default function PricingCard({ plan }: PricingCardProps) {
               <li key={index} className="flex items-start gap-3">
                 <div
                   className={`rounded-full p-1 mt-0.5 flex-shrink-0 ${
-                    plan.popular ? "bg-blue-100 dark:bg-blue-900/30" : "bg-gray-100 dark:bg-gray-700"
+                    plan.popular ? "bg-brand-indigo-light dark:bg-brand-indigo/30" : "bg-gray-100 dark:bg-gray-700"
                   }`}
                 >
                   <Check
                     className={`w-3 h-3 ${
-                      plan.popular ? "text-blue-600 dark:text-blue-400" : "text-gray-600 dark:text-gray-300"
+                      plan.popular
+                        ? "text-brand-indigo dark:text-brand-indigo-light"
+                        : "text-gray-600 dark:text-gray-300"
                     }`}
                   />
                 </div>

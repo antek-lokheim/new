@@ -37,7 +37,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           alt={product.name}
           className="w-full h-40 sm:h-48 object-cover group-hover:scale-105 transition-transform duration-300"
         />
-        <div className="absolute top-3 right-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-2 py-1 rounded-full text-xs font-semibold">
+        <div className="absolute top-3 right-3 bg-gradient-to-r from-brand-pink to-brand-indigo text-white px-2 py-1 rounded-full text-xs font-semibold">
           {product.theme}
         </div>
         <button
@@ -68,7 +68,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         <Link
           href={`/products/${product.id}`}
-          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base font-medium"
+          className="w-full bg-gradient-to-r from-brand-pink to-brand-indigo text-white px-4 py-2 rounded-lg hover:from-brand-pink/90 hover:to-brand-indigo/90 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base font-medium"
         >
           <Eye className="w-4 h-4" />
           Lihat Detail

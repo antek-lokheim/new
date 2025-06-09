@@ -73,8 +73,8 @@ export default function BantuanPage() {
                   <div
                     className={`p-3 rounded-lg ${
                       method.primary
-                        ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white"
-                        : "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
+                        ? "bg-gradient-to-r from-brand-pink to-brand-indigo text-white"
+                        : "bg-brand-indigo-light dark:bg-brand-indigo/30 text-brand-indigo dark:text-brand-indigo-light"
                     }`}
                   >
                     <method.icon className="w-6 h-6" />
@@ -91,7 +91,7 @@ export default function BantuanPage() {
                     rel="noopener noreferrer"
                     className={`w-full py-2 px-4 rounded-lg text-center inline-block transition-colors ${
                       method.primary
-                        ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700"
+                        ? "bg-gradient-to-r from-brand-pink to-brand-indigo text-white hover:from-brand-pink/90 hover:to-brand-indigo/90"
                         : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600"
                     }`}
                   >
@@ -106,7 +106,7 @@ export default function BantuanPage() {
         <AnimatedSection animation="fade-up" delay={400}>
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-200 dark:border-gray-700 mb-16">
             <div className="flex items-center gap-4 mb-6">
-              <div className="p-3 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
+              <div className="p-3 rounded-lg bg-brand-indigo-light dark:bg-brand-indigo/30 text-brand-indigo dark:text-brand-indigo-light">
                 <Clock className="w-6 h-6" />
               </div>
               <div>
@@ -170,7 +170,7 @@ export default function BantuanPage() {
               <Link href={category.link}>
                 <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="p-3 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
+                    <div className="p-3 rounded-lg bg-brand-indigo-light dark:bg-brand-indigo/30 text-brand-indigo dark:text-brand-indigo-light">
                       <category.icon className="w-6 h-6" />
                     </div>
                     <div>

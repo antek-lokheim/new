@@ -52,7 +52,7 @@ export default function ProductsPage() {
               onClick={() => setSelectedTheme("all")}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 selectedTheme === "all"
-                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white"
+                  ? "bg-gradient-to-r from-brand-pink to-brand-indigo text-white"
                   : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
               }`}
             >
@@ -64,7 +64,7 @@ export default function ProductsPage() {
                 onClick={() => setSelectedTheme(theme.id)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors capitalize ${
                   selectedTheme === theme.id
-                    ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white"
+                    ? "bg-gradient-to-r from-brand-pink to-brand-indigo text-white"
                     : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                 }`}
               >
