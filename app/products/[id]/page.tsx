@@ -1,11 +1,19 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { products } from "@/lib/data"
-import { formatPrice } from "@/lib/utils"
-import { Star, ShoppingCart, Heart, Share2, Eye, Check } from "lucide-react"
+import { Star, ShoppingCart, Heart, Share2, Eye, Check, Trash2 } from "lucide-react"
 import { notFound } from "next/navigation"
 import PreviewModal from "@/components/preview-modal"
+import AnimatedSection from "@/components/AnimatedSection"
+import {
+  addToCart,
+  addToWishlist,
+  removeFromWishlist,
+  isInWishlist,
+  isInCart,
+  removeFromCart,
+} from "@/lib/localStorage"
 
 export default function ProductDetailPage({
   params,
@@ -13,31 +21,125 @@ export default function ProductDetailPage({
   params: { id: string }
 }) {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
+  const [inWishlist, setInWishlist] = useState(false)
+  const [inCart, setInCart] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
+
   const product = products.find((p) => p.id === params.id)
+
+  useEffect(() => {
+    if (product) {
+      setInWishlist(isInWishlist(product.id))
+      setInCart(isInCart(product.id))
+    }
+  }, [product])
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   if (!product) {
     notFound()
   }
 
+  const handleWishlistToggle = () => {
+    if (inWishlist) {
+      removeFromWishlist(product.id)
+      setInWishlist(false)
+    } else {
+      addToWishlist(product.id)
+      setInWishlist(true)
+    }
+    window.dispatchEvent(new Event("wishlistUpdated"))
+  }
+
+  const handleCartAction = () => {
+    if (inCart) {
+      // Remove from cart
+      removeFromCart(product.id)
+      setInCart(false)
+      window.dispatchEvent(new Event("cartUpdated"))
+    } else {
+      // Add to cart
+      addToCart(product.id)
+      setInCart(true)
+      setShowSuccess(true)
+
+      // Hide success message after 2 seconds
+      setTimeout(() => {
+        setShowSuccess(false)
+      }, 2000)
+
+      window.dispatchEvent(new Event("cartUpdated"))
+    }
+  }
+
+  const getCartButtonContent = () => {
+    if (showSuccess) {
+      return (
+        <>
+          <Check className="w-4 h-4 sm:w-5 sm:h-5" />
+          Berhasil Ditambahkan!
+        </>
+      )
+    }
+
+    if (inCart) {
+      return (
+        <>
+          <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
+          Hapus dari Keranjang
+        </>
+      )
+    }
+
+    return (
+      <>
+        <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
+        Tambah ke Keranjang
+      </>
+    )
+  }
+
+  const getCartButtonStyle = () => {
+    if (showSuccess) {
+      return "bg-green-600 text-white cursor-default"
+    }
+
+    if (inCart) {
+      return "bg-red-600 text-white hover:bg-red-700"
+    }
+
+    return "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-md hover:shadow-lg"
+  }
+
   return (
     <>
-      <div className="py-8 sm:py-20 bg-gray-50 dark:bg-gray-900 min-h-screen">
+      <div className="py-8 sm:py-20 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
             {/* Product Image */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-8 shadow-lg border border-gray-200 dark:border-gray-700">
+            <AnimatedSection
+              animation="fade-right"
+              className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-8 shadow-lg border border-gray-200 dark:border-gray-700"
+            >
               <img
                 src={product.imageUrl || "/placeholder.svg"}
                 alt={product.name}
                 className="w-full h-auto rounded-lg"
               />
-            </div>
+            </AnimatedSection>
 
             {/* Product Info */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-8 shadow-lg border border-gray-200 dark:border-gray-700">
+            <AnimatedSection
+              animation="fade-left"
+              delay={200}
+              className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-8 shadow-lg border border-gray-200 dark:border-gray-700"
+            >
               <div className="mb-3 sm:mb-4">
-                <span className="bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full text-xs sm:text-sm font-semibold">
-                  {product.category}
+                <span className="bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full text-xs sm:text-sm font-semibold capitalize">
+                  {product.theme}
                 </span>
               </div>
 
@@ -66,18 +168,12 @@ export default function ProductDetailPage({
                 </span>
               </div>
 
-              <div className="mb-6 sm:mb-8">
-                <span className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  {formatPrice(product.price)}
-                </span>
-              </div>
-
               <p className="text-sm sm:text-base lg:text-lg text-gray-700 dark:text-gray-300 mb-6 sm:mb-8 leading-relaxed">
                 {product.description}
               </p>
 
               {/* Features */}
-              <div className="mb-6 sm:mb-8">
+              <AnimatedSection animation="fade-up" delay={400} className="mb-6 sm:mb-8">
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4 text-sm sm:text-base">
                   Fitur Template:
                 </h3>
@@ -92,9 +188,9 @@ export default function ProductDetailPage({
                     </li>
                   ))}
                 </ul>
-              </div>
+              </AnimatedSection>
 
-              <div className="flex flex-col gap-3 sm:gap-4 mb-6 sm:mb-8">
+              <AnimatedSection animation="fade-up" delay={600} className="flex flex-col gap-3 sm:gap-4 mb-6 sm:mb-8">
                 <button
                   onClick={() => setIsPreviewOpen(true)}
                   className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all flex items-center justify-center gap-2 font-semibold text-sm sm:text-base shadow-lg"
@@ -103,34 +199,46 @@ export default function ProductDetailPage({
                   Preview Template
                 </button>
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all flex items-center justify-center gap-2 font-semibold flex-1 text-sm sm:text-base">
-                    <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
-                    Beli Sekarang
+                  <button
+                    onClick={handleCartAction}
+                    disabled={showSuccess}
+                    className={`flex-1 px-6 sm:px-8 py-3 sm:py-4 rounded-lg transition-all flex items-center justify-center gap-2 font-semibold text-sm sm:text-base ${getCartButtonStyle()}`}
+                  >
+                    {getCartButtonContent()}
                   </button>
-                  <button className="border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-4 sm:px-6 py-3 sm:py-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base">
-                    <Heart className="w-4 h-4 sm:w-5 sm:h-5" />
-                    Wishlist
+                  <button
+                    onClick={handleWishlistToggle}
+                    className={`border-2 px-4 sm:px-6 py-3 sm:py-4 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm sm:text-base ${
+                      inWishlist
+                        ? "border-red-500 bg-red-500 text-white"
+                        : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                    }`}
+                  >
+                    <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${inWishlist ? "fill-current" : ""}`} />
+                    {inWishlist ? "Di Wishlist" : "Wishlist"}
                   </button>
                   <button className="border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-4 sm:px-6 py-3 sm:py-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base">
                     <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
                     Bagikan
                   </button>
                 </div>
-              </div>
+              </AnimatedSection>
 
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-6 sm:pt-8">
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4 text-sm sm:text-base">
-                  Yang Anda Dapatkan:
-                </h3>
-                <ul className="space-y-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300">
-                  <li>✓ Template siap pakai dan mudah dikustomisasi</li>
-                  <li>✓ Hosting gratis selama 1 tahun</li>
-                  <li>✓ Domain gratis (.my.id)</li>
-                  <li>✓ Tutorial lengkap customisasi</li>
-                  <li>✓ Support 24/7 via WhatsApp</li>
-                </ul>
-              </div>
-            </div>
+              <AnimatedSection
+                animation="fade-up"
+                delay={800}
+                className="border-t border-gray-200 dark:border-gray-700 pt-6 sm:pt-8"
+              >
+                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-2 text-sm sm:text-base">
+                    💡 Informasi Pemesanan
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">
+                    Setelah menambahkan template ke keranjang, Anda dapat memilih paket yang sesuai di halaman checkout.
+                  </p>
+                </div>
+              </AnimatedSection>
+            </AnimatedSection>
           </div>
         </div>
       </div>

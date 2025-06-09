@@ -1,20 +1,67 @@
 "use client"
 
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Menu, X, ShoppingCart, Heart } from "lucide-react"
 import { ThemeToggle } from "./theme-toggle"
+import { usePathname } from "next/navigation"
+import { getCartItems, getWishlistItems } from "@/lib/localStorage"
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
+  const [cartCount, setCartCount] = useState(0)
+  const [wishlistCount, setWishlistCount] = useState(0)
+  const pathname = usePathname()
+
+  // Update counts when component mounts and on storage changes
+  useEffect(() => {
+    const updateCounts = () => {
+      setCartCount(getCartItems().length)
+      setWishlistCount(getWishlistItems().length)
+    }
+
+    updateCounts()
+
+    // Listen for storage changes
+    window.addEventListener("storage", updateCounts)
+    // Listen for custom events when items are added/removed
+    window.addEventListener("cartUpdated", updateCounts)
+    window.addEventListener("wishlistUpdated", updateCounts)
+
+    return () => {
+      window.removeEventListener("storage", updateCounts)
+      window.removeEventListener("cartUpdated", updateCounts)
+      window.removeEventListener("wishlistUpdated", updateCounts)
+    }
+  }, [])
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsOpen(false)
+  }, [pathname])
+
+  const scrollToSection = (sectionId: string) => {
+    if (pathname !== "/") {
+      window.location.href = `/#${sectionId}`
+      return
+    }
+
+    const section = document.getElementById(sectionId)
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" })
+    }
+  }
 
   return (
     <nav className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm sticky top-0 z-40 border-b border-gray-200 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-14 sm:h-16">
           <div className="flex items-center">
-            <Link href="/" className="flex-shrink-0">
-              <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <Link href="/" className="flex items-center gap-2">
+              <div className="bg-blue-950 p-1 rounded-md">
+                <img src="/logo.svg" alt="KoleksiQyu" className="w-5 h-5 sm:w-6 sm:h-6" />
+              </div>
+              <span className="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 KoleksiQyu
               </span>
             </Link>
@@ -34,33 +81,49 @@ export default function Navbar() {
             >
               Template
             </Link>
-            <Link
-              href="#features"
+            <button
+              onClick={() => scrollToSection("features")}
               className="text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
               Fitur
-            </Link>
-            <Link
-              href="#pricing"
+            </button>
+            <button
+              onClick={() => scrollToSection("pricing")}
               className="text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
               Harga
-            </Link>
+            </button>
             <Link
-              href="#testimonials"
+              href="/tutorial"
               className="text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
-              Testimoni
+              Tutorial
             </Link>
             <div className="flex items-center gap-2">
               <ThemeToggle />
-              <button className="p-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <Link
+                href="/checkout"
+                className="relative p-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              >
                 <Heart className="w-4 h-4" />
-              </button>
-              <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-1.5 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all flex items-center gap-1.5 text-sm">
+                {wishlistCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {wishlistCount}
+                  </span>
+                )}
+              </Link>
+              <Link
+                href="/checkout"
+                className="relative bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-1.5 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all flex items-center gap-1.5 text-sm"
+              >
                 <ShoppingCart className="w-4 h-4" />
                 Keranjang
-              </button>
+                {cartCount > 0 && (
+                  <span className="bg-white text-blue-600 text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
             </div>
           </div>
 
@@ -69,9 +132,12 @@ export default function Navbar() {
             <ThemeToggle />
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+              className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 relative"
             >
               {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {!isOpen && cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 w-2 h-2 rounded-full"></span>
+              )}
             </button>
           </div>
         </div>
@@ -83,43 +149,41 @@ export default function Navbar() {
               <Link
                 href="/"
                 className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-                onClick={() => setIsOpen(false)}
               >
                 Beranda
               </Link>
               <Link
                 href="/products"
                 className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-                onClick={() => setIsOpen(false)}
               >
                 Template
               </Link>
-              <Link
-                href="#features"
-                className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-                onClick={() => setIsOpen(false)}
+              <button
+                onClick={() => scrollToSection("features")}
+                className="block w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
               >
                 Fitur
-              </Link>
-              <Link
-                href="#pricing"
-                className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-                onClick={() => setIsOpen(false)}
+              </button>
+              <button
+                onClick={() => scrollToSection("pricing")}
+                className="block w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
               >
                 Harga
-              </Link>
+              </button>
               <Link
-                href="#testimonials"
+                href="/tutorial"
                 className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-                onClick={() => setIsOpen(false)}
               >
-                Testimoni
+                Tutorial
               </Link>
               <div className="flex gap-2 px-3 py-2">
-                <button className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all flex items-center justify-center gap-2 text-sm">
+                <Link
+                  href="/checkout"
+                  className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all flex items-center justify-center gap-2 text-sm"
+                >
                   <ShoppingCart className="w-4 h-4" />
-                  Keranjang
-                </button>
+                  Keranjang ({cartCount})
+                </Link>
               </div>
             </div>
           </div>

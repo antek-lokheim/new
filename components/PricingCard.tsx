@@ -1,5 +1,4 @@
 import type { PricingPlan } from "@/lib/types"
-import { formatPrice } from "@/lib/utils"
 import { Check, Star } from "lucide-react"
 
 interface PricingCardProps {
@@ -7,45 +6,77 @@ interface PricingCardProps {
 }
 
 export default function PricingCard({ plan }: PricingCardProps) {
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price)
+  }
+
   return (
-    <div
-      className={`relative bg-white rounded-2xl shadow-lg p-8 ${plan.popular ? "ring-2 ring-primary-600 scale-105" : ""}`}
-    >
-      {plan.popular && (
-        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-          <div className="bg-primary-600 text-white px-4 py-2 rounded-full flex items-center gap-1 text-sm font-semibold">
-            <Star className="w-4 h-4" />
-            Terpopuler
-          </div>
-        </div>
-      )}
-
-      <div className="text-center mb-8">
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
-        <div className="mb-4">
-          <span className="text-4xl font-bold text-gray-900">{formatPrice(plan.price)}</span>
-          <span className="text-gray-600">/{plan.period}</span>
-        </div>
-      </div>
-
-      <ul className="space-y-4 mb-8">
-        {plan.features.map((feature, index) => (
-          <li key={index} className="flex items-start gap-3">
-            <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-            <span className="text-gray-700">{feature}</span>
-          </li>
-        ))}
-      </ul>
-
-      <button
-        className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors ${
-          plan.popular
-            ? "bg-primary-600 text-white hover:bg-primary-700"
-            : "bg-gray-100 text-gray-900 hover:bg-gray-200"
+    <div className="relative h-full flex flex-col mx-2 sm:mx-0">
+      <div
+        className={`flex-1 bg-white dark:bg-gray-800 rounded-2xl shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
+          plan.popular ? "border-2 border-blue-500 dark:border-blue-400" : "border border-gray-200 dark:border-gray-700"
         }`}
       >
-        Pilih Paket
-      </button>
+        {plan.popular && (
+          <div className="absolute -top-3 left-0 w-full flex justify-center">
+            <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-1 rounded-full flex items-center gap-1 text-xs font-semibold shadow-md">
+              <Star className="w-3 h-3" />
+              Terpopuler
+            </div>
+          </div>
+        )}
+
+        <div
+          className={`px-6 pt-8 pb-6 text-center ${
+            plan.popular
+              ? "bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-t-2xl"
+              : ""
+          }`}
+        >
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{plan.name}</h3>
+          <div className="mb-1">
+            <span
+              className={`text-2xl sm:text-3xl font-bold ${
+                plan.popular
+                  ? "bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+                  : "text-gray-900 dark:text-white"
+              }`}
+            >
+              {formatPrice(plan.price)}
+            </span>
+          </div>
+        </div>
+
+        <div className="p-6 flex flex-col flex-1">
+          <ul className="space-y-3 mb-6 flex-1">
+            {plan.features.map((feature, index) => (
+              <li key={index} className="flex items-start gap-3">
+                <div
+                  className={`rounded-full p-1 mt-0.5 flex-shrink-0 ${
+                    plan.popular ? "bg-blue-100 dark:bg-blue-900/30" : "bg-gray-100 dark:bg-gray-700"
+                  }`}
+                >
+                  <Check
+                    className={`w-3 h-3 ${
+                      plan.popular ? "text-blue-600 dark:text-blue-400" : "text-gray-600 dark:text-gray-300"
+                    }`}
+                  />
+                </div>
+                <span className="text-sm text-gray-700 dark:text-gray-300">{feature}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div className="text-center">
+            <p className="text-sm text-gray-500 dark:text-gray-400">Pilih paket ini saat checkout</p>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

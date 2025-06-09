@@ -3,12 +3,13 @@ export interface Product {
   name: string
   description: string
   imageUrl: string
-  price: number
   category: string
+  theme: string
   rating: number
   reviews: number
   previewUrl: string
   features: string[]
+  featured?: boolean
 }
 
 export interface Testimonial {
@@ -35,4 +36,14 @@ export interface PricingPlan {
   period: string
   features: string[]
   popular?: boolean
+}
+
+export interface CartItem {
+  productId: string
+  selectedPlan: string
+}
+
+export interface WishlistItem {
+  productId: string
+  addedAt: string
 }
