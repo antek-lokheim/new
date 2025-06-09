@@ -2,208 +2,182 @@
 
 import { useState } from "react"
 import AnimatedSection from "@/components/AnimatedSection"
-import { ChevronDown, ChevronUp, MessageCircle, Mail } from "lucide-react"
-
-const faqCategories = [
-  {
-    id: "general",
-    name: "Umum",
-    faqs: [
-      {
-        question: "Apa itu KoleksiQyu?",
-        answer:
-          "KoleksiQyu adalah platform yang menyediakan template undangan pernikahan digital berkualitas tinggi. Kami membantu pasangan membuat undangan digital yang cantik dan profesional untuk hari bahagia mereka.",
-      },
-      {
-        question: "Bagaimana cara memesan template?",
-        answer:
-          "Anda dapat memilih template yang diinginkan, pilih paket yang sesuai, lalu klik 'Tambah ke Keranjang'. Setelah itu, lanjutkan ke halaman checkout dan kirim pesanan melalui WhatsApp untuk konfirmasi.",
-      },
-      {
-        question: "Berapa lama proses pembuatan undangan?",
-        answer:
-          "Proses customisasi template biasanya memakan waktu 1-3 hari kerja, tergantung kompleksitas permintaan dan paket yang dipilih. Untuk paket Luxury, kami menyediakan layanan express dengan waktu pengerjaan 24 jam.",
-      },
-    ],
-  },
-  {
-    id: "pricing",
-    name: "Harga & Paket",
-    faqs: [
-      {
-        question: "Apa perbedaan antara paket Basic, Premium, dan Luxury?",
-        answer:
-          "Paket Basic mencakup customisasi dasar dengan hosting 6 bulan. Paket Premium menambahkan fitur advanced dan hosting 1 tahun. Paket Luxury memberikan layanan lengkap dengan desain custom dan hosting unlimited.",
-      },
-      {
-        question: "Apakah ada biaya tambahan?",
-        answer:
-          "Tidak ada biaya tersembunyi. Semua fitur yang tercantum dalam paket sudah termasuk dalam harga. Revisi minor juga sudah termasuk dalam paket.",
-      },
-      {
-        question: "Bagaimana cara pembayaran?",
-        answer:
-          "Kami menerima pembayaran melalui transfer bank, e-wallet (OVO, GoPay, DANA), dan QRIS. Detail pembayaran akan diberikan setelah konfirmasi pesanan via WhatsApp.",
-      },
-    ],
-  },
-  {
-    id: "technical",
-    name: "Teknis",
-    faqs: [
-      {
-        question: "Apakah undangan bisa diakses di semua perangkat?",
-        answer:
-          "Ya, semua template kami responsive dan dapat diakses dengan sempurna di desktop, tablet, dan smartphone. Kami memastikan tampilan optimal di semua ukuran layar.",
-      },
-      {
-        question: "Bagaimana cara mengedit konten undangan?",
-        answer:
-          "Tim kami akan membantu proses editing berdasarkan informasi yang Anda berikan. Anda tidak perlu memiliki keahlian teknis, cukup berikan detail acara dan foto yang diinginkan.",
-      },
-      {
-        question: "Apakah bisa menambahkan musik latar?",
-        answer:
-          "Ya, semua paket mendukung penambahan musik latar. Anda bisa memilih dari koleksi musik kami atau mengupload musik pilihan sendiri.",
-      },
-    ],
-  },
-  {
-    id: "support",
-    name: "Dukungan",
-    faqs: [
-      {
-        question: "Bagaimana cara menghubungi customer service?",
-        answer:
-          "Anda dapat menghubungi kami melalui WhatsApp di +62 856-4525-1595, email di support@koleksiqyu.com, atau melalui form kontak di website.",
-      },
-      {
-        question: "Apakah ada garansi revisi?",
-        answer:
-          "Ya, kami memberikan garansi revisi sesuai dengan paket yang dipilih. Paket Basic mendapat 2x revisi, Premium 5x revisi, dan Luxury unlimited revisi.",
-      },
-      {
-        question: "Bagaimana jika tidak puas dengan hasilnya?",
-        answer:
-          "Kepuasan Anda adalah prioritas kami. Jika tidak puas, kami akan melakukan revisi hingga sesuai keinginan atau memberikan refund 100% jika belum memasuki tahap customisasi.",
-      },
-    ],
-  },
-]
+import { ChevronDown, ChevronUp, Search } from "lucide-react"
+import Link from "next/link"
 
 export default function FAQPage() {
-  const [activeCategory, setActiveCategory] = useState("general")
-  const [openFAQ, setOpenFAQ] = useState<string | null>(null)
+  const [activeIndex, setActiveIndex] = useState<number | null>(null)
+  const [searchQuery, setSearchQuery] = useState("")
 
-  const toggleFAQ = (categoryId: string, index: number) => {
-    const faqId = `${categoryId}-${index}`
-    setOpenFAQ(openFAQ === faqId ? null : faqId)
+  const faqCategories = [
+    { id: "general", name: "Umum" },
+    { id: "templates", name: "Template" },
+    { id: "payment", name: "Pembayaran" },
+    { id: "customization", name: "Kustomisasi" },
+    { id: "technical", name: "Teknis" },
+  ]
+
+  const faqs = [
+    {
+      question: "Apa itu undangan digital?",
+      answer:
+        "Undangan digital adalah undangan pernikahan dalam bentuk website yang dapat dibagikan melalui link atau QR code. Undangan ini dapat diakses melalui perangkat apa saja yang terhubung dengan internet seperti smartphone, tablet, atau komputer.",
+      category: "general",
+    },
+    {
+      question: "Bagaimana cara membagikan undangan digital?",
+      answer:
+        "Undangan digital dapat dibagikan melalui berbagai platform seperti WhatsApp, Instagram, Email, atau media sosial lainnya. Anda cukup membagikan link undangan atau QR code yang telah kami sediakan.",
+      category: "general",
+    },
+    {
+      question: "Berapa lama proses pembuatan undangan digital?",
+      answer:
+        "Proses pembuatan undangan digital biasanya memakan waktu 1-3 hari kerja tergantung pada kompleksitas kustomisasi yang Anda inginkan.",
+      category: "general",
+    },
+    {
+      question: "Apakah template dapat dikustomisasi sesuai keinginan?",
+      answer:
+        "Ya, semua template kami dapat dikustomisasi sesuai dengan keinginan Anda. Anda dapat mengubah warna, font, teks, foto, dan elemen lainnya sesuai dengan tema pernikahan Anda.",
+      category: "templates",
+    },
+    {
+      question: "Berapa lama undangan digital akan aktif?",
+      answer:
+        "Tergantung pada paket yang Anda pilih. Paket Basic aktif selama 6 bulan, paket Premium aktif selama 1 tahun, dan paket Luxury aktif tanpa batas waktu.",
+      category: "templates",
+    },
+    {
+      question: "Metode pembayaran apa saja yang tersedia?",
+      answer:
+        "Kami menerima pembayaran melalui transfer bank (BCA, Mandiri, BNI, BRI), e-wallet (GoPay, OVO, Dana, LinkAja), dan kartu kredit/debit.",
+      category: "payment",
+    },
+    {
+      question: "Apakah ada biaya tambahan untuk fitur tertentu?",
+      answer:
+        "Tidak ada biaya tambahan untuk fitur yang sudah termasuk dalam paket yang Anda pilih. Namun, untuk fitur khusus atau kustomisasi yang sangat spesifik mungkin akan dikenakan biaya tambahan.",
+      category: "payment",
+    },
+    {
+      question: "Bagaimana cara mengubah foto pada template?",
+      answer:
+        "Anda dapat mengubah foto pada template melalui panel admin yang kami sediakan. Cukup upload foto yang ingin digunakan dan sesuaikan posisinya sesuai keinginan.",
+      category: "customization",
+    },
+    {
+      question: "Apakah saya bisa menambahkan musik pada undangan?",
+      answer:
+        "Ya, Anda dapat menambahkan musik background pada undangan digital. Kami menyediakan berbagai pilihan musik atau Anda dapat mengupload musik pilihan Anda sendiri.",
+      category: "customization",
+    },
+    {
+      question: "Bagaimana jika terjadi error pada undangan digital?",
+      answer:
+        "Jika terjadi error atau masalah teknis pada undangan digital Anda, silakan hubungi tim support kami melalui WhatsApp atau email. Kami akan segera memperbaikinya dalam waktu 24 jam.",
+      category: "technical",
+    },
+    {
+      question: "Apakah undangan digital bisa diakses tanpa internet?",
+      answer:
+        "Tidak, undangan digital memerlukan koneksi internet untuk diakses. Namun, beberapa fitur mungkin dapat diakses secara offline jika sudah pernah dibuka sebelumnya (tergantung pada cache browser).",
+      category: "technical",
+    },
+  ]
+
+  const toggleAccordion = (index: number) => {
+    setActiveIndex(activeIndex === index ? null : index)
   }
+
+  const filteredFaqs = faqs.filter(
+    (faq) =>
+      faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      faq.answer.toLowerCase().includes(searchQuery.toLowerCase()),
+  )
 
   return (
     <div className="py-20 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSection animation="fade-up">
           <div className="text-center mb-16">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              Frequently Asked Questions
+              Pertanyaan yang Sering Diajukan
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Temukan jawaban untuk pertanyaan yang sering diajukan tentang layanan KoleksiQyu
+              Temukan jawaban untuk pertanyaan umum tentang layanan undangan digital kami
             </p>
           </div>
         </AnimatedSection>
 
-        <div className="grid lg:grid-cols-4 gap-8">
-          {/* Category Sidebar */}
-          <AnimatedSection animation="fade-right" className="lg:col-span-1">
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 sticky top-24">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Kategori</h3>
-              <div className="space-y-2">
-                {faqCategories.map((category) => (
-                  <button
-                    key={category.id}
-                    onClick={() => setActiveCategory(category.id)}
-                    className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
-                      activeCategory === category.id
-                        ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white"
-                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    }`}
-                  >
-                    {category.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </AnimatedSection>
+        <AnimatedSection animation="fade-up" delay={200}>
+          <div className="relative mb-8">
+            <input
+              type="text"
+              placeholder="Cari pertanyaan..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-4 py-3 pl-12 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <Search className="absolute left-4 top-3.5 w-5 h-5 text-gray-400" />
+          </div>
+        </AnimatedSection>
 
-          {/* FAQ Content */}
-          <div className="lg:col-span-3">
+        <AnimatedSection animation="fade-up" delay={300}>
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-12">
+            <button className="px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+              Semua
+            </button>
             {faqCategories.map((category) => (
-              <div key={category.id} className={activeCategory === category.id ? "block" : "hidden"}>
-                <AnimatedSection animation="fade-left" delay={200}>
-                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
-                    <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-                      <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{category.name}</h2>
-                    </div>
-                    <div className="divide-y divide-gray-200 dark:divide-gray-700">
-                      {category.faqs.map((faq, index) => {
-                        const faqId = `${category.id}-${index}`
-                        const isOpen = openFAQ === faqId
-                        return (
-                          <div key={index} className="p-6">
-                            <button
-                              onClick={() => toggleFAQ(category.id, index)}
-                              className="w-full flex items-center justify-between text-left"
-                            >
-                              <h3 className="text-lg font-semibold text-gray-900 dark:text-white pr-4">
-                                {faq.question}
-                              </h3>
-                              {isOpen ? (
-                                <ChevronUp className="w-5 h-5 text-gray-500 flex-shrink-0" />
-                              ) : (
-                                <ChevronDown className="w-5 h-5 text-gray-500 flex-shrink-0" />
-                              )}
-                            </button>
-                            {isOpen && (
-                              <div className="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed">{faq.answer}</div>
-                            )}
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
-                </AnimatedSection>
-              </div>
+              <button
+                key={category.id}
+                className="px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                {category.name}
+              </button>
             ))}
           </div>
+        </AnimatedSection>
+
+        <div className="space-y-4">
+          {filteredFaqs.map((faq, index) => (
+            <AnimatedSection key={index} animation="fade-up" delay={400 + index * 50}>
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <button
+                  className="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none"
+                  onClick={() => toggleAccordion(index)}
+                >
+                  <h3 className="font-semibold text-gray-900 dark:text-white">{faq.question}</h3>
+                  {activeIndex === index ? (
+                    <ChevronUp className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                  ) : (
+                    <ChevronDown className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                  )}
+                </button>
+                <div
+                  className={`px-6 pb-4 transition-all duration-300 ease-in-out ${
+                    activeIndex === index ? "block opacity-100" : "hidden opacity-0"
+                  }`}
+                >
+                  <p className="text-gray-600 dark:text-gray-300">{faq.answer}</p>
+                </div>
+              </div>
+            </AnimatedSection>
+          ))}
         </div>
 
-        {/* Contact Section */}
-        <AnimatedSection animation="fade-up" delay={400}>
-          <div className="mt-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white text-center">
-            <h2 className="text-2xl font-bold mb-4">Masih Ada Pertanyaan?</h2>
-            <p className="text-blue-100 mb-8 max-w-2xl mx-auto">
-              Tim customer service kami siap membantu Anda 24/7. Jangan ragu untuk menghubungi kami!
+        <AnimatedSection animation="fade-up" delay={800}>
+          <div className="mt-16 text-center">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Masih Punya Pertanyaan?</h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
+              Jika Anda tidak menemukan jawaban yang Anda cari, jangan ragu untuk menghubungi tim support kami.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="https://wa.me/6285645251595"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-white text-blue-600 px-6 py-3 rounded-lg hover:bg-blue-50 transition-colors flex items-center gap-2 justify-center font-semibold"
-              >
-                <MessageCircle className="w-5 h-5" />
-                WhatsApp Support
-              </a>
-              <a
-                href="mailto:support@koleksiqyu.com"
-                className="border-2 border-white text-white px-6 py-3 rounded-lg hover:bg-white hover:text-blue-600 transition-colors flex items-center gap-2 justify-center font-semibold"
-              >
-                <Mail className="w-5 h-5" />
-                Email Support
-              </a>
-            </div>
+            <Link
+              href="/bantuan"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all inline-flex"
+            >
+              Hubungi Support
+            </Link>
           </div>
         </AnimatedSection>
       </div>

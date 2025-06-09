@@ -58,7 +58,9 @@ export default function Navbar() {
         <div className="flex justify-between h-14 sm:h-16">
           <div className="flex items-center">
             <Link href="/" className="flex items-center gap-2">
-              <img src="/logo.svg" alt="KoleksiQyu" className="w-8 h-8 sm:w-10 sm:h-10" />
+              <div className="bg-blue-950 p-1.5 rounded-lg">
+                <img src="/logo.svg" alt="KoleksiQyu" className="w-6 h-6 sm:w-7 sm:h-7" />
+              </div>
               <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 KoleksiQyu
               </span>
@@ -91,12 +93,12 @@ export default function Navbar() {
             >
               Harga
             </button>
-            <button
-              onClick={() => scrollToSection("testimonials")}
+            <Link
+              href="/tutorial"
               className="text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
-              Testimoni
-            </button>
+              Tutorial
+            </Link>
             <div className="flex items-center gap-2">
               <ThemeToggle />
               <Link
@@ -165,12 +167,12 @@ export default function Navbar() {
               >
                 Harga
               </button>
-              <button
-                onClick={() => scrollToSection("testimonials")}
-                className="block w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+              <Link
+                href="/tutorial"
+                className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
               >
-                Testimoni
-              </button>
+                Tutorial
+              </Link>
               <div className="flex gap-2 px-3 py-2">
                 <Link
                   href="/checkout"

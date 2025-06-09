@@ -1,19 +1,22 @@
 "use client"
 
 import Link from "next/link"
+import { useState, useEffect } from "react"
 import { ArrowRight, Play, Sparkles } from "lucide-react"
 import AnimatedSection from "./AnimatedSection"
 import { products } from "@/lib/data"
-import { useEffect, useState } from "react"
 
 export default function Hero() {
-  const [featuredProduct, setFeaturedProduct] = useState(null)
+  const [featuredProduct, setFeaturedProduct] = useState<any>(null)
 
   useEffect(() => {
+    // Get featured products
     const featuredProducts = products.filter((product) => product.featured)
+
+    // Select a random featured product
     if (featuredProducts.length > 0) {
-      const randomProduct = featuredProducts[Math.floor(Math.random() * featuredProducts.length)]
-      setFeaturedProduct(randomProduct)
+      const randomIndex = Math.floor(Math.random() * featuredProducts.length)
+      setFeaturedProduct(featuredProducts[randomIndex])
     }
   }, [])
 
@@ -61,14 +64,22 @@ export default function Hero() {
           <AnimatedSection animation="fade-left" delay={200}>
             <div className="relative">
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-4 sm:p-8 border border-gray-200 dark:border-gray-700">
-                <img
-                  src={featuredProduct?.imageUrl || "/placeholder.svg?height=400&width=600"}
-                  alt={featuredProduct?.name || "Template Preview"}
-                  className="w-full h-auto rounded-lg"
-                />
+                {featuredProduct ? (
+                  <img
+                    src={featuredProduct.imageUrl || "/placeholder.svg"}
+                    alt={featuredProduct.name}
+                    className="w-full h-auto rounded-lg"
+                  />
+                ) : (
+                  <img
+                    src="/placeholder.svg?height=400&width=600"
+                    alt="Template Preview"
+                    className="w-full h-auto rounded-lg"
+                  />
+                )}
               </div>
               <div className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-1 sm:px-4 sm:py-2 rounded-full font-semibold text-xs sm:text-sm shadow-lg">
-                {featuredProduct?.name || "Terbaru!"}
+                Terbaru!
               </div>
             </div>
           </AnimatedSection>

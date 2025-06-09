@@ -1,14 +1,25 @@
+"use client"
+
 import Link from "next/link"
 import { themes } from "@/lib/data"
+import { useEffect, useState } from "react"
 
 export default function Footer() {
+  const [currentYear, setCurrentYear] = useState<number>(2024)
+
+  useEffect(() => {
+    setCurrentYear(new Date().getFullYear())
+  }, [])
+
   return (
     <footer className="bg-gray-900 dark:bg-gray-950 text-white py-8 sm:py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-3 sm:mb-4">
-              <img src="/logo.svg" alt="KoleksiQyu" className="w-8 h-8 sm:w-10 sm:h-10" />
+              <div className="bg-blue-950 p-2 rounded-lg">
+                <img src="/logo.svg" alt="KoleksiQyu" className="w-8 h-8 sm:w-10 sm:h-10" />
+              </div>
               <h3 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                 KoleksiQyu
               </h3>
@@ -43,21 +54,6 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="hover:text-white transition-colors">
-                  Tentang Kami
-                </Link>
-              </li>
-              <li>
-                <Link href="/checkout" className="hover:text-white transition-colors">
-                  Checkout
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Bantuan</h4>
-            <ul className="space-y-2 text-gray-400 text-xs sm:text-sm">
-              <li>
                 <Link href="/tutorial" className="hover:text-white transition-colors">
                   Tutorial
                 </Link>
@@ -67,6 +63,16 @@ export default function Footer() {
                   FAQ
                 </Link>
               </li>
+              <li>
+                <Link href="/bantuan" className="hover:text-white transition-colors">
+                  Bantuan
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Dukungan</h4>
+            <ul className="space-y-2 text-gray-400 text-xs sm:text-sm">
               <li>
                 <a
                   href="https://wa.me/6285645251595"
@@ -78,15 +84,25 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <Link href="/#pricing" className="hover:text-white transition-colors">
-                  Harga
+                <Link href="/tutorial" className="hover:text-white transition-colors">
+                  Tutorial
+                </Link>
+              </li>
+              <li>
+                <Link href="/faq" className="hover:text-white transition-colors">
+                  FAQ
+                </Link>
+              </li>
+              <li>
+                <Link href="/bantuan" className="hover:text-white transition-colors">
+                  Bantuan
                 </Link>
               </li>
             </ul>
           </div>
         </div>
         <div className="border-t border-gray-800 mt-6 sm:mt-8 pt-6 sm:pt-8 text-center text-gray-400 text-xs sm:text-sm">
-          <p>&copy; 2024 KoleksiQyu. Semua hak dilindungi.</p>
+          <p>&copy; {currentYear} KoleksiQyu. Semua hak dilindungi.</p>
         </div>
       </div>
     </footer>
