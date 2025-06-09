@@ -5,10 +5,35 @@ import { useState, useEffect } from "react"
 import { Menu, X, ShoppingCart, Heart } from "lucide-react"
 import { ThemeToggle } from "./theme-toggle"
 import { usePathname } from "next/navigation"
+import { getCartItems, getWishlistItems } from "@/lib/localStorage"
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
+  const [cartCount, setCartCount] = useState(0)
+  const [wishlistCount, setWishlistCount] = useState(0)
   const pathname = usePathname()
+
+  // Update counts when component mounts and on storage changes
+  useEffect(() => {
+    const updateCounts = () => {
+      setCartCount(getCartItems().length)
+      setWishlistCount(getWishlistItems().length)
+    }
+
+    updateCounts()
+
+    // Listen for storage changes
+    window.addEventListener("storage", updateCounts)
+    // Listen for custom events when items are added/removed
+    window.addEventListener("cartUpdated", updateCounts)
+    window.addEventListener("wishlistUpdated", updateCounts)
+
+    return () => {
+      window.removeEventListener("storage", updateCounts)
+      window.removeEventListener("cartUpdated", updateCounts)
+      window.removeEventListener("wishlistUpdated", updateCounts)
+    }
+  }, [])
 
   // Close mobile menu when route changes
   useEffect(() => {
@@ -17,7 +42,6 @@ export default function Navbar() {
 
   const scrollToSection = (sectionId: string) => {
     if (pathname !== "/") {
-      // If not on homepage, navigate to homepage with hash
       window.location.href = `/#${sectionId}`
       return
     }
@@ -33,7 +57,8 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-14 sm:h-16">
           <div className="flex items-center">
-            <Link href="/" className="flex-shrink-0">
+            <Link href="/" className="flex items-center gap-2">
+              <img src="/logo.svg" alt="KoleksiQyu" className="w-8 h-8 sm:w-10 sm:h-10" />
               <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 KoleksiQyu
               </span>
@@ -74,13 +99,29 @@ export default function Navbar() {
             </button>
             <div className="flex items-center gap-2">
               <ThemeToggle />
-              <button className="p-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <Link
+                href="/checkout"
+                className="relative p-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              >
                 <Heart className="w-4 h-4" />
-              </button>
-              <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-1.5 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all flex items-center gap-1.5 text-sm">
+                {wishlistCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {wishlistCount}
+                  </span>
+                )}
+              </Link>
+              <Link
+                href="/checkout"
+                className="relative bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-1.5 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all flex items-center gap-1.5 text-sm"
+              >
                 <ShoppingCart className="w-4 h-4" />
                 Keranjang
-              </button>
+                {cartCount > 0 && (
+                  <span className="bg-white text-blue-600 text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
             </div>
           </div>
 
@@ -131,10 +172,13 @@ export default function Navbar() {
                 Testimoni
               </button>
               <div className="flex gap-2 px-3 py-2">
-                <button className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all flex items-center justify-center gap-2 text-sm">
+                <Link
+                  href="/checkout"
+                  className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all flex items-center justify-center gap-2 text-sm"
+                >
                   <ShoppingCart className="w-4 h-4" />
-                  Keranjang
-                </button>
+                  Keranjang ({cartCount})
+                </Link>
               </div>
             </div>
           </div>

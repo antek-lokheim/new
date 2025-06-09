@@ -1,5 +1,14 @@
 import type { Product, Feature, PricingPlan, Testimonial } from "./types"
 
+export const themes = [
+  { id: "elegant", name: "Elegant", description: "Desain elegan dan mewah" },
+  { id: "modern", name: "Modern", description: "Desain minimalis dan kontemporer" },
+  { id: "vintage", name: "Vintage", description: "Desain klasik dan retro" },
+  { id: "floral", name: "Floral", description: "Desain dengan tema bunga" },
+  { id: "luxury", name: "Luxury", description: "Desain mewah dan eksklusif" },
+  { id: "beach", name: "Beach", description: "Desain dengan tema pantai" },
+]
+
 export const products: Product[] = [
   {
     id: "1",
@@ -7,8 +16,8 @@ export const products: Product[] = [
     description:
       "Template undangan pernikahan dengan desain elegan dan romantis. Dilengkapi dengan animasi bunga mawar yang indah, galeri foto, dan countdown timer menuju hari bahagia Anda.",
     imageUrl: "/placeholder.svg?height=400&width=400",
-    price: 299000,
-    category: "Elegant",
+    category: "Premium",
+    theme: "elegant",
     rating: 4.9,
     reviews: 156,
     previewUrl: "https://elegant-rose-demo.vercel.app",
@@ -21,8 +30,8 @@ export const products: Product[] = [
     description:
       "Desain minimalis dan modern untuk pasangan yang menyukai kesederhanaan. Template ini menampilkan tipografi yang bersih dengan layout yang elegan dan mudah dibaca.",
     imageUrl: "/placeholder.svg?height=400&width=400",
-    price: 199000,
-    category: "Modern",
+    category: "Standard",
+    theme: "modern",
     rating: 4.8,
     reviews: 203,
     previewUrl: "https://modern-minimalist-demo.vercel.app",
@@ -35,8 +44,8 @@ export const products: Product[] = [
     description:
       "Template dengan nuansa vintage klasik yang memberikan kesan mewah dan berkelas. Cocok untuk pernikahan dengan tema tradisional atau vintage.",
     imageUrl: "/placeholder.svg?height=400&width=400",
-    price: 349000,
-    category: "Vintage",
+    category: "Premium",
+    theme: "vintage",
     rating: 4.7,
     reviews: 89,
     previewUrl: "https://vintage-classic-demo.vercel.app",
@@ -49,8 +58,8 @@ export const products: Product[] = [
     description:
       "Template dengan tema taman bunga yang segar dan natural. Desain ini cocok untuk pernikahan outdoor atau dengan tema garden party.",
     imageUrl: "/placeholder.svg?height=400&width=400",
-    price: 279000,
-    category: "Floral",
+    category: "Standard",
+    theme: "floral",
     rating: 4.9,
     reviews: 134,
     previewUrl: "https://floral-garden-demo.vercel.app",
@@ -63,8 +72,8 @@ export const products: Product[] = [
     description:
       "Template mewah dengan aksen emas yang memberikan kesan royal dan eksklusif. Sempurna untuk pernikahan dengan tema luxury dan glamour.",
     imageUrl: "/placeholder.svg?height=400&width=400",
-    price: 399000,
     category: "Luxury",
+    theme: "luxury",
     rating: 4.8,
     reviews: 67,
     previewUrl: "https://royal-gold-demo.vercel.app",
@@ -77,13 +86,41 @@ export const products: Product[] = [
     description:
       "Template dengan tema pantai dan sunset yang romantis. Ideal untuk pernikahan di pantai atau dengan tema tropical dan santai.",
     imageUrl: "/placeholder.svg?height=400&width=400",
-    price: 259000,
-    category: "Beach",
+    category: "Standard",
+    theme: "beach",
     rating: 4.6,
     reviews: 98,
     previewUrl: "https://beach-sunset-demo.vercel.app",
     features: ["Beach Theme", "Sunset Colors", "Wave Animations", "Location Guide", "Weather Forecast"],
     featured: true,
+  },
+  {
+    id: "7",
+    name: "Elegant Pearl",
+    description:
+      "Template elegan dengan aksen mutiara yang memberikan kesan mewah dan berkelas. Cocok untuk pernikahan formal dan elegant.",
+    imageUrl: "/placeholder.svg?height=400&width=400",
+    category: "Premium",
+    theme: "elegant",
+    rating: 4.8,
+    reviews: 92,
+    previewUrl: "https://elegant-pearl-demo.vercel.app",
+    features: ["Pearl Accents", "Elegant Typography", "Photo Gallery", "RSVP System", "Music Player"],
+    featured: false,
+  },
+  {
+    id: "8",
+    name: "Modern Geometric",
+    description:
+      "Desain modern dengan elemen geometris yang unik. Template ini cocok untuk pasangan yang menyukai desain kontemporer dan artistic.",
+    imageUrl: "/placeholder.svg?height=400&width=400",
+    category: "Standard",
+    theme: "modern",
+    rating: 4.7,
+    reviews: 145,
+    previewUrl: "https://modern-geometric-demo.vercel.app",
+    features: ["Geometric Patterns", "Modern Layout", "Interactive Elements", "Mobile Optimized", "Fast Loading"],
+    featured: false,
   },
 ]
 
@@ -149,14 +186,14 @@ export const testimonials: Testimonial[] = [
 
 export const pricingPlans: PricingPlan[] = [
   {
-    id: "1",
+    id: "basic",
     name: "Basic",
     price: 99000,
     period: "template",
     features: ["1 Template pilihan", "Customisasi dasar", "Support email", "Hosting 6 bulan", "Domain gratis"],
   },
   {
-    id: "2",
+    id: "premium",
     name: "Premium",
     price: 199000,
     period: "template",
@@ -171,7 +208,7 @@ export const pricingPlans: PricingPlan[] = [
     ],
   },
   {
-    id: "3",
+    id: "luxury",
     name: "Luxury",
     price: 399000,
     period: "template",
