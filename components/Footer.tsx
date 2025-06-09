@@ -21,7 +21,7 @@ export default function Footer() {
               <div className="bg-blue-950 p-1.5 rounded-md">
                 <img src="/logo.svg" alt="KoleksiQyu" className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
-              <h3 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              <h3 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-brand-pink to-brand-indigo bg-clip-text text-transparent">
                 KoleksiQyu
               </h3>
             </div>
@@ -126,21 +126,7 @@ export default function Footer() {
                   WhatsApp Support
                 </a>
               </li>
-              <li>
-                <Link href="/tutorial" className="hover:text-white transition-colors">
-                  Tutorial
-                </Link>
-              </li>
-              <li>
-                <Link href="/faq" className="hover:text-white transition-colors">
-                  FAQ
-                </Link>
-              </li>
-              <li>
-                <Link href="/bantuan" className="hover:text-white transition-colors">
-                  Bantuan
-                </Link>
-              </li>
+              {/* Removed duplicate Tutorial, FAQ, Bantuan links */}
             </ul>
           </div>
         </div>

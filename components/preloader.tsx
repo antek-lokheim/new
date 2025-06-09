@@ -37,15 +37,15 @@ export default function Preloader() {
             />
             <defs>
               <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#3b82f6" />
-                <stop offset="100%" stopColor="#8b5cf6" />
+                <stop offset="0%" stopColor="#EC4899" /> {/* brand-pink */}
+                <stop offset="100%" stopColor="#4F46E5" /> {/* brand-indigo */}
               </linearGradient>
             </defs>
           </svg>
 
           {/* K letter in the middle */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent animate-pulse">
+            <span className="text-2xl font-bold bg-gradient-to-r from-brand-pink to-brand-indigo bg-clip-text text-transparent animate-pulse">
               K
             </span>
           </div>

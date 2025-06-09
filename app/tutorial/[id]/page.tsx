@@ -506,7 +506,7 @@ export default function TutorialDetailPage({ params }: { params: { id: string } 
           <div className="mb-8">
             <Link
               href="/tutorial"
-              className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mb-6"
+              className="inline-flex items-center text-brand-indigo dark:text-brand-indigo-light hover:text-brand-indigo/90 dark:hover:text-brand-indigo-light/90 mb-6"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Kembali ke Tutorial
@@ -514,12 +514,12 @@ export default function TutorialDetailPage({ params }: { params: { id: string } 
 
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sm:p-8 border border-gray-200 dark:border-gray-700 mb-8">
               <div className="flex items-center gap-4 mb-6">
-                <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded-lg">
-                  <IconComponent className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                <div className="bg-brand-indigo-light dark:bg-brand-indigo/30 p-3 rounded-lg">
+                  <IconComponent className="w-6 h-6 text-brand-indigo dark:text-brand-indigo-light" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30 px-2 py-1 rounded">
+                    <span className="text-sm font-medium text-brand-indigo dark:text-brand-indigo-light bg-brand-indigo-light dark:bg-brand-indigo/30 px-2 py-1 rounded">
                       {tutorial.category}
                     </span>
                     <span className="text-sm text-gray-500 dark:text-gray-400">• {tutorial.time}</span>
@@ -557,7 +557,7 @@ export default function TutorialDetailPage({ params }: { params: { id: string } 
               </Link>
               <Link
                 href="/bantuan"
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all"
+                className="bg-gradient-to-r from-brand-pink to-brand-indigo text-white px-6 py-3 rounded-lg hover:from-brand-pink/90 hover:to-brand-indigo/90 transition-all"
               >
                 Hubungi Support
               </Link>

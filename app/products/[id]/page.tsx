@@ -24,6 +24,7 @@ export default function ProductDetailPage({
   const [inWishlist, setInWishlist] = useState(false)
   const [inCart, setInCart] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [showCopySuccess, setShowCopySuccess] = useState(false)
 
   const product = products.find((p) => p.id === params.id)
 
@@ -75,6 +76,30 @@ export default function ProductDetailPage({
     }
   }
 
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: product.name,
+          text: product.description,
+          url: window.location.href,
+        })
+        console.log("Product shared successfully")
+      } catch (error) {
+        console.error("Error sharing product:", error)
+      }
+    } else {
+      // Fallback for browsers that don't support Web Share API
+      navigator.clipboard
+        .writeText(window.location.href)
+        .then(() => {
+          setShowCopySuccess(true)
+          setTimeout(() => setShowCopySuccess(false), 2000) // Hide after 2 seconds
+        })
+        .catch((err) => console.error("Failed to copy link: ", err))
+    }
+  }
+
   const getCartButtonContent = () => {
     if (showSuccess) {
       return (
@@ -111,7 +136,7 @@ export default function ProductDetailPage({
       return "bg-red-600 text-white hover:bg-red-700"
     }
 
-    return "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-md hover:shadow-lg"
+    return "bg-gradient-to-r from-brand-pink to-brand-indigo text-white hover:from-brand-pink/90 hover:to-brand-indigo/90 shadow-md hover:shadow-lg"
   }
 
   return (
@@ -138,7 +163,7 @@ export default function ProductDetailPage({
               className="bg-white dark:bg-gray-800 rounded-2xl p-4 sm:p-8 shadow-lg border border-gray-200 dark:border-gray-700"
             >
               <div className="mb-3 sm:mb-4">
-                <span className="bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full text-xs sm:text-sm font-semibold capitalize">
+                <span className="bg-gradient-to-r from-brand-pink-light to-brand-purple-light dark:from-brand-pink/30 dark:to-brand-purple/30 text-brand-indigo dark:text-brand-indigo-light px-3 py-1 rounded-full text-xs sm:text-sm font-semibold capitalize">
                   {product.theme}
                 </span>
               </div>
@@ -198,7 +223,7 @@ export default function ProductDetailPage({
                   <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
                   Preview Template
                 </button>
-                <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex flex-col sm:flex-row gap-3 relative">
                   <button
                     onClick={handleCartAction}
                     disabled={showSuccess}
@@ -217,10 +242,18 @@ export default function ProductDetailPage({
                     <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${inWishlist ? "fill-current" : ""}`} />
                     {inWishlist ? "Di Wishlist" : "Wishlist"}
                   </button>
-                  <button className="border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-4 sm:px-6 py-3 sm:py-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base">
+                  <button
+                    onClick={handleShare}
+                    className="border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-4 sm:px-6 py-3 sm:py-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
+                  >
                     <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
                     Bagikan
                   </button>
+                  {showCopySuccess && (
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg text-sm shadow-lg animate-fade-in-up">
+                      Tersalin ke clipboard!
+                    </div>
+                  )}
                 </div>
               </AnimatedSection>
 
@@ -229,7 +262,7 @@ export default function ProductDetailPage({
                 delay={800}
                 className="border-t border-gray-200 dark:border-gray-700 pt-6 sm:pt-8"
               >
-                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                <div className="bg-brand-indigo-light dark:bg-brand-indigo/20 p-4 rounded-lg">
                   <h3 className="font-semibold text-gray-900 dark:text-white mb-2 text-sm sm:text-base">
                     💡 Informasi Pemesanan
                   </h3>

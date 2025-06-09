@@ -49,6 +49,19 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // New brand colors
+        "brand-pink": {
+          DEFAULT: "#EC4899", // pink-500
+          light: "#FCE7F6", // pink-100 equivalent
+        },
+        "brand-indigo": {
+          DEFAULT: "#4F46E5", // indigo-600
+          light: "#EEF2FF", // indigo-100 equivalent
+        },
+        "brand-purple": {
+          DEFAULT: "#9333EA", // purple-600
+          light: "#F3E8FF", // purple-100 equivalent
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
