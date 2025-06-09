@@ -62,8 +62,6 @@ export default function TutorialPage() {
     },
   ]
 
-  const categories = ["Semua", "Pemula", "Dasar", "Menengah", "Lanjutan"]
-
   return (
     <div className="py-20 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -75,23 +73,6 @@ export default function TutorialPage() {
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               Pelajari cara menggunakan dan menyesuaikan template undangan digital dengan mudah
             </p>
-          </div>
-        </AnimatedSection>
-
-        <AnimatedSection animation="fade-up" delay={200}>
-          <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-12">
-            {categories.map((category, index) => (
-              <button
-                key={category}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  index === 0
-                    ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white"
-                    : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                }`}
-              >
-                {category}
-              </button>
-            ))}
           </div>
         </AnimatedSection>
 

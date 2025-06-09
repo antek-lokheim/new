@@ -14,14 +14,6 @@ export default function FAQPage() {
     window.scrollTo(0, 0)
   }, [])
 
-  const faqCategories = [
-    { id: "general", name: "Umum" },
-    { id: "templates", name: "Template" },
-    { id: "payment", name: "Pembayaran" },
-    { id: "customization", name: "Kustomisasi" },
-    { id: "technical", name: "Teknis" },
-  ]
-
   const faqs = [
     {
       question: "Apa itu undangan digital?",
@@ -125,22 +117,6 @@ export default function FAQPage() {
               className="w-full px-4 py-3 pl-12 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
             <Search className="absolute left-4 top-3.5 w-5 h-5 text-gray-400" />
-          </div>
-        </AnimatedSection>
-
-        <AnimatedSection animation="fade-up" delay={300}>
-          <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-12">
-            <button className="px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-              Semua
-            </button>
-            {faqCategories.map((category) => (
-              <button
-                key={category.id}
-                className="px-4 py-2 rounded-lg text-sm font-medium transition-colors bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-              >
-                {category.name}
-              </button>
-            ))}
           </div>
         </AnimatedSection>
 
