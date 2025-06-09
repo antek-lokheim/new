@@ -69,7 +69,7 @@ export default function HomePage() {
               </p>
             </div>
           </AnimatedSection>
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-4 sm:gap-8 max-w-5xl mx-auto">
             {pricingPlans.map((plan, index) => (
               <AnimatedSection key={plan.id} animation="fade-up" delay={index * 100}>
                 <PricingCard plan={plan} />

@@ -71,3 +71,23 @@ export const isInWishlist = (productId: string): boolean => {
 export const isInCart = (productId: string): boolean => {
   return getCartItems().some((item) => item.productId === productId)
 }
+
+// Pricing plan selection functions
+export const getSelectedPlan = (): string | null => {
+  if (typeof window === "undefined") return null
+  try {
+    return localStorage.getItem("koleksiqyu-selected-plan")
+  } catch {
+    return null
+  }
+}
+
+export const setSelectedPlan = (planId: string): void => {
+  if (typeof window === "undefined") return
+  localStorage.setItem("koleksiqyu-selected-plan", planId)
+}
+
+export const clearSelectedPlan = (): void => {
+  if (typeof window === "undefined") return
+  localStorage.removeItem("koleksiqyu-selected-plan")
+}

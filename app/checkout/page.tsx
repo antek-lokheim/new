@@ -1,10 +1,18 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { getCartItems, getWishlistItems, removeFromCart, removeFromWishlist, clearCart } from "@/lib/localStorage"
+import {
+  getCartItems,
+  getWishlistItems,
+  removeFromCart,
+  removeFromWishlist,
+  clearCart,
+  getSelectedPlan,
+  clearSelectedPlan,
+} from "@/lib/localStorage"
 import { products, pricingPlans } from "@/lib/data"
 import { formatPrice } from "@/lib/utils"
-import { Trash2, Heart, ShoppingCart, Send } from "lucide-react"
+import { Trash2, Heart, ShoppingCart, Send, Star } from "lucide-react"
 import AnimatedSection from "@/components/AnimatedSection"
 
 export default function CheckoutPage() {
@@ -12,11 +20,13 @@ export default function CheckoutPage() {
   const [wishlistItems, setWishlistItems] = useState<any[]>([])
   const [customerName, setCustomerName] = useState("")
   const [customerPhone, setCustomerPhone] = useState("")
+  const [selectedPlan, setSelectedPlan] = useState<string>("")
 
   useEffect(() => {
     const loadItems = () => {
       const cart = getCartItems()
       const wishlist = getWishlistItems()
+      const selectedPlan = getSelectedPlan()
 
       const cartWithProducts = cart.map((item) => ({
         ...item,
@@ -31,17 +41,24 @@ export default function CheckoutPage() {
 
       setCartItems(cartWithProducts)
       setWishlistItems(wishlistWithProducts)
+
+      // Set selected plan if exists
+      if (selectedPlan) {
+        setSelectedPlan(selectedPlan)
+      }
     }
 
     loadItems()
 
-    // Listen for storage changes
+    // Listen for storage changes and plan selection
     window.addEventListener("cartUpdated", loadItems)
     window.addEventListener("wishlistUpdated", loadItems)
+    window.addEventListener("planSelected", loadItems)
 
     return () => {
       window.removeEventListener("cartUpdated", loadItems)
       window.removeEventListener("wishlistUpdated", loadItems)
+      window.removeEventListener("planSelected", loadItems)
     }
   }, [])
 
@@ -66,14 +83,23 @@ export default function CheckoutPage() {
     message += `Nama: ${customerName}\n`
     message += `No. HP: ${customerPhone}\n\n`
 
+    // Add selected pricing plan if exists
+    if (selectedPlan) {
+      const planData = pricingPlans.find((p) => p.id === selectedPlan)
+      if (planData) {
+        message += `📋 *PAKET DIPILIH:*\n`
+        message += `${planData.name} - ${formatPrice(planData.price)}\n\n`
+      }
+    }
+
     if (cartItems.length > 0) {
-      message += `📋 *PESANAN:*\n`
+      message += `🛒 *TEMPLATE DIPILIH:*\n`
       cartItems.forEach((item, index) => {
         message += `${index + 1}. ${item.product?.name}\n`
         message += `   Paket: ${item.plan?.name} - ${formatPrice(item.plan?.price || 0)}\n`
         message += `   Preview: ${item.product?.previewUrl}\n\n`
       })
-      message += `💰 *Total: ${formatPrice(getTotalPrice())}*\n\n`
+      message += `💰 *Total Template: ${formatPrice(getTotalPrice())}*\n\n`
     }
 
     if (wishlistItems.length > 0) {
@@ -95,19 +121,24 @@ export default function CheckoutPage() {
       return
     }
 
-    if (cartItems.length === 0 && wishlistItems.length === 0) {
-      alert("Keranjang dan wishlist kosong")
+    if (cartItems.length === 0 && wishlistItems.length === 0 && !selectedPlan) {
+      alert("Pilih template atau paket terlebih dahulu")
       return
     }
 
     const message = generateWhatsAppMessage()
     const whatsappUrl = `https://wa.me/6285645251595?text=${message}`
 
-    // Clear cart after sending
+    // Clear cart and selected plan after sending
     if (cartItems.length > 0) {
       clearCart()
       setCartItems([])
       window.dispatchEvent(new Event("cartUpdated"))
+    }
+
+    if (selectedPlan) {
+      clearSelectedPlan()
+      setSelectedPlan("")
     }
 
     window.open(whatsappUrl, "_blank")
@@ -126,6 +157,42 @@ export default function CheckoutPage() {
         </AnimatedSection>
 
         <div className="grid lg:grid-cols-3 gap-8">
+          {selectedPlan && (
+            <AnimatedSection animation="fade-up" delay={100}>
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700 mb-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Star className="w-5 h-5 text-yellow-500" />
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Paket Dipilih</h2>
+                </div>
+                {(() => {
+                  const planData = pricingPlans.find((p) => p.id === selectedPlan)
+                  return planData ? (
+                    <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                      <div className="flex justify-between items-center mb-2">
+                        <h3 className="font-semibold text-gray-900 dark:text-white">{planData.name}</h3>
+                        <span className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                          {formatPrice(planData.price)}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                        {planData.features.slice(0, 3).join(" • ")}
+                      </p>
+                      <button
+                        onClick={() => {
+                          clearSelectedPlan()
+                          setSelectedPlan("")
+                        }}
+                        className="text-red-500 hover:text-red-700 text-sm"
+                      >
+                        Hapus Paket
+                      </button>
+                    </div>
+                  ) : null
+                })()}
+              </div>
+            </AnimatedSection>
+          )}
+
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-6">
             {cartItems.length > 0 && (
@@ -221,7 +288,7 @@ export default function CheckoutPage() {
               </AnimatedSection>
             )}
 
-            {cartItems.length === 0 && wishlistItems.length === 0 && (
+            {cartItems.length === 0 && wishlistItems.length === 0 && !selectedPlan && (
               <AnimatedSection animation="fade-up" delay={200}>
                 <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-12 text-center border border-gray-200 dark:border-gray-700">
                   <ShoppingCart className="w-16 h-16 text-gray-400 mx-auto mb-4" />
@@ -278,7 +345,11 @@ export default function CheckoutPage() {
 
                 <button
                   onClick={handleSendToWhatsApp}
-                  disabled={!customerName || !customerPhone || (cartItems.length === 0 && wishlistItems.length === 0)}
+                  disabled={
+                    !customerName ||
+                    !customerPhone ||
+                    (cartItems.length === 0 && wishlistItems.length === 0 && !selectedPlan)
+                  }
                   className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all flex items-center justify-center gap-2 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Send className="w-5 h-5" />
