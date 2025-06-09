@@ -1,8 +1,22 @@
+"use client"
+
 import Link from "next/link"
 import { ArrowRight, Play, Sparkles } from "lucide-react"
 import AnimatedSection from "./AnimatedSection"
+import { products } from "@/lib/data"
+import { useEffect, useState } from "react"
 
 export default function Hero() {
+  const [featuredProduct, setFeaturedProduct] = useState(null)
+
+  useEffect(() => {
+    const featuredProducts = products.filter((product) => product.featured)
+    if (featuredProducts.length > 0) {
+      const randomProduct = featuredProducts[Math.floor(Math.random() * featuredProducts.length)]
+      setFeaturedProduct(randomProduct)
+    }
+  }, [])
+
   return (
     <section className="relative bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 py-12 sm:py-20 overflow-hidden">
       <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
@@ -31,23 +45,30 @@ export default function Hero() {
                 Lihat Template
                 <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
               </Link>
-              <button className="border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-6 sm:px-8 py-3 sm:py-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 font-semibold text-sm sm:text-base">
-                <Play className="w-4 h-4 sm:w-5 sm:h-5" />
-                Lihat Demo
-              </button>
+              {featuredProduct && (
+                <a
+                  href={featuredProduct.previewUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-6 sm:px-8 py-3 sm:py-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 font-semibold text-sm sm:text-base"
+                >
+                  <Play className="w-4 h-4 sm:w-5 sm:h-5" />
+                  Lihat Demo
+                </a>
+              )}
             </div>
           </AnimatedSection>
           <AnimatedSection animation="fade-left" delay={200}>
             <div className="relative">
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-4 sm:p-8 border border-gray-200 dark:border-gray-700">
                 <img
-                  src="/placeholder.svg?height=400&width=600"
-                  alt="Template Preview"
+                  src={featuredProduct?.imageUrl || "/placeholder.svg?height=400&width=600"}
+                  alt={featuredProduct?.name || "Template Preview"}
                   className="w-full h-auto rounded-lg"
                 />
               </div>
               <div className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-1 sm:px-4 sm:py-2 rounded-full font-semibold text-xs sm:text-sm shadow-lg">
-                Terbaru!
+                {featuredProduct?.name || "Terbaru!"}
               </div>
             </div>
           </AnimatedSection>

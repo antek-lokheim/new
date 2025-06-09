@@ -43,20 +43,30 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/checkout" className="hover:text-white transition-colors">
-                  Checkout
+                <Link href="/about" className="hover:text-white transition-colors">
+                  Tentang Kami
                 </Link>
               </li>
               <li>
-                <Link href="/#pricing" className="hover:text-white transition-colors">
-                  Harga
+                <Link href="/checkout" className="hover:text-white transition-colors">
+                  Checkout
                 </Link>
               </li>
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Dukungan</h4>
+            <h4 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Bantuan</h4>
             <ul className="space-y-2 text-gray-400 text-xs sm:text-sm">
+              <li>
+                <Link href="/tutorial" className="hover:text-white transition-colors">
+                  Tutorial
+                </Link>
+              </li>
+              <li>
+                <Link href="/faq" className="hover:text-white transition-colors">
+                  FAQ
+                </Link>
+              </li>
               <li>
                 <a
                   href="https://wa.me/6285645251595"
@@ -68,19 +78,9 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
-                  Tutorial
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white transition-colors">
-                  FAQ
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white transition-colors">
-                  Bantuan
-                </a>
+                <Link href="/#pricing" className="hover:text-white transition-colors">
+                  Harga
+                </Link>
               </li>
             </ul>
           </div>
