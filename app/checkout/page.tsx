@@ -164,7 +164,7 @@ export default function CheckoutPage() {
         <AnimatedSection animation="fade-up">
           <div className="text-center mb-12">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">Checkout</h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300">
+            <p className="text-base text-gray-600 dark:text-gray-300">
               Pilih paket untuk setiap template dan lanjutkan ke WhatsApp untuk pemesanan
             </p>
           </div>

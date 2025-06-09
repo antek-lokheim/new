@@ -22,7 +22,7 @@ export default function HomePage() {
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
                 Mengapa Memilih KoleksiQyu?
               </h2>
-              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+              <p className="text-base text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
                 Kami berkomitmen memberikan pengalaman terbaik dengan template undangan digital berkualitas premium
               </p>
             </div>
@@ -43,7 +43,7 @@ export default function HomePage() {
           <AnimatedSection animation="fade-up">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">Template Unggulan</h2>
-              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+              <p className="text-base text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
                 Koleksi template undangan pernikahan terbaik dan terpopuler pilihan pengantin
               </p>
             </div>
@@ -64,7 +64,7 @@ export default function HomePage() {
           <AnimatedSection animation="fade-up">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">Paket Harga</h2>
-              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+              <p className="text-base text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
                 Pilih paket yang sesuai dengan kebutuhan dan dapatkan keuntungan eksklusif
               </p>
             </div>
@@ -91,7 +91,7 @@ export default function HomePage() {
           <AnimatedSection animation="fade-up">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">Kata Pengantin</h2>
-              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+              <p className="text-base text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
                 Dengarkan pengalaman pasangan yang telah menggunakan template KoleksiQyu
               </p>
             </div>
