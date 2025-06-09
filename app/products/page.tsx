@@ -17,6 +17,11 @@ export default function ProductsPage() {
     }
   }, [searchParams])
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   const filteredProducts =
     selectedTheme === "all" ? products : products.filter((product) => product.theme === selectedTheme)
 

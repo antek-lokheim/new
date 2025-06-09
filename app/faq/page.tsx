@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import AnimatedSection from "@/components/AnimatedSection"
 import { ChevronDown, ChevronUp, Search } from "lucide-react"
 import Link from "next/link"
@@ -8,6 +8,11 @@ import Link from "next/link"
 export default function FAQPage() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   const faqCategories = [
     { id: "general", name: "Umum" },

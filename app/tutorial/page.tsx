@@ -1,8 +1,16 @@
+"use client"
+
+import { useEffect } from "react"
 import AnimatedSection from "@/components/AnimatedSection"
 import { BookOpen, Video, FileText, ArrowRight } from "lucide-react"
 import Link from "next/link"
 
 export default function TutorialPage() {
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   const tutorials = [
     {
       id: "1",

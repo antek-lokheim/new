@@ -1,8 +1,16 @@
+"use client"
+
+import { useEffect } from "react"
 import AnimatedSection from "@/components/AnimatedSection"
 import { MessageSquare, Mail, Phone, Clock, FileText, HelpCircle } from "lucide-react"
 import Link from "next/link"
 
 export default function BantuanPage() {
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   const contactMethods = [
     {
       icon: MessageSquare,

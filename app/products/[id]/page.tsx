@@ -2,11 +2,18 @@
 
 import { useState, useEffect } from "react"
 import { products } from "@/lib/data"
-import { Star, ShoppingCart, Heart, Share2, Eye, Check } from "lucide-react"
+import { Star, ShoppingCart, Heart, Share2, Eye, Check, Trash2 } from "lucide-react"
 import { notFound } from "next/navigation"
 import PreviewModal from "@/components/preview-modal"
 import AnimatedSection from "@/components/AnimatedSection"
-import { addToCart, addToWishlist, removeFromWishlist, isInWishlist, isInCart } from "@/lib/localStorage"
+import {
+  addToCart,
+  addToWishlist,
+  removeFromWishlist,
+  isInWishlist,
+  isInCart,
+  removeFromCart,
+} from "@/lib/localStorage"
 
 export default function ProductDetailPage({
   params,
@@ -16,8 +23,7 @@ export default function ProductDetailPage({
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
   const [inWishlist, setInWishlist] = useState(false)
   const [inCart, setInCart] = useState(false)
-  const [showAlert, setShowAlert] = useState(false)
-  const [alertMessage, setAlertMessage] = useState("")
+  const [showSuccess, setShowSuccess] = useState(false)
 
   const product = products.find((p) => p.id === params.id)
 
@@ -27,6 +33,11 @@ export default function ProductDetailPage({
       setInCart(isInCart(product.id))
     }
   }, [product])
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   if (!product) {
     notFound()
@@ -43,30 +54,70 @@ export default function ProductDetailPage({
     window.dispatchEvent(new Event("wishlistUpdated"))
   }
 
-  const handleAddToCart = () => {
-    addToCart(product.id)
-    setInCart(true)
+  const handleCartAction = () => {
+    if (inCart) {
+      // Remove from cart
+      removeFromCart(product.id)
+      setInCart(false)
+      window.dispatchEvent(new Event("cartUpdated"))
+    } else {
+      // Add to cart
+      addToCart(product.id)
+      setInCart(true)
+      setShowSuccess(true)
 
-    // Show success message
-    setAlertMessage("Template berhasil ditambahkan ke keranjang!")
-    setShowAlert(true)
-    setTimeout(() => setShowAlert(false), 3000)
+      // Hide success message after 2 seconds
+      setTimeout(() => {
+        setShowSuccess(false)
+      }, 2000)
 
-    window.dispatchEvent(new Event("cartUpdated"))
+      window.dispatchEvent(new Event("cartUpdated"))
+    }
+  }
+
+  const getCartButtonContent = () => {
+    if (showSuccess) {
+      return (
+        <>
+          <Check className="w-4 h-4 sm:w-5 sm:h-5" />
+          Berhasil Ditambahkan!
+        </>
+      )
+    }
+
+    if (inCart) {
+      return (
+        <>
+          <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
+          Hapus dari Keranjang
+        </>
+      )
+    }
+
+    return (
+      <>
+        <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
+        Tambah ke Keranjang
+      </>
+    )
+  }
+
+  const getCartButtonStyle = () => {
+    if (showSuccess) {
+      return "bg-green-600 text-white cursor-default"
+    }
+
+    if (inCart) {
+      return "bg-red-600 text-white hover:bg-red-700"
+    }
+
+    return "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-md hover:shadow-lg"
   }
 
   return (
     <>
       <div className="py-8 sm:py-20 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Alert message */}
-          {showAlert && (
-            <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2">
-              <Check className="w-5 h-5" />
-              {alertMessage}
-            </div>
-          )}
-
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
             {/* Product Image */}
             <AnimatedSection
@@ -149,16 +200,11 @@ export default function ProductDetailPage({
                 </button>
                 <div className="flex flex-col sm:flex-row gap-3">
                   <button
-                    onClick={handleAddToCart}
-                    disabled={inCart}
-                    className={`flex-1 px-6 sm:px-8 py-3 sm:py-4 rounded-lg transition-all flex items-center justify-center gap-2 font-semibold text-sm sm:text-base ${
-                      inCart
-                        ? "bg-green-600 text-white cursor-not-allowed"
-                        : "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-md hover:shadow-lg"
-                    }`}
+                    onClick={handleCartAction}
+                    disabled={showSuccess}
+                    className={`flex-1 px-6 sm:px-8 py-3 sm:py-4 rounded-lg transition-all flex items-center justify-center gap-2 font-semibold text-sm sm:text-base ${getCartButtonStyle()}`}
                   >
-                    <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
-                    {inCart ? "Sudah di Keranjang" : "Tambah ke Keranjang"}
+                    {getCartButtonContent()}
                   </button>
                   <button
                     onClick={handleWishlistToggle}
