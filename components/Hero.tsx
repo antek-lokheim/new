@@ -25,7 +25,7 @@ export default function Hero() {
       <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* Mobile layout (column) */}
-        <div className="flex flex-col gap-8 lg:hidden">
+        <div className="flex flex-col gap-8 md:hidden">
           <AnimatedSection animation="fade-up">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-xs sm:text-sm font-medium mb-4">
               <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -91,7 +91,7 @@ export default function Hero() {
         </div>
 
         {/* Desktop layout (grid) */}
-        <div className="hidden lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center lg:min-h-[600px]">
+        <div className="hidden md:grid md:grid-cols-2 md:gap-16 md:items-center md:min-h-[600px]">
           {/* Text Content - Left Side */}
           <AnimatedSection animation="fade-right" className="flex flex-col justify-center">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium mb-6">
@@ -131,7 +131,7 @@ export default function Hero() {
           </AnimatedSection>
 
           {/* Image Content - Right Side */}
-          <AnimatedSection animation="fade-left" delay={200} className="flex justify-center lg:justify-end">
+          <AnimatedSection animation="fade-left" delay={200} className="flex justify-center md:justify-end">
             <div className="relative max-w-lg w-full">
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 border border-gray-200 dark:border-gray-700 transform hover:scale-[1.02] transition-transform duration-300">
                 {featuredProduct ? (
