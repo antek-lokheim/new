@@ -101,7 +101,7 @@ export default function FAQPage() {
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               Pertanyaan yang Sering Diajukan
             </h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+            <p className="text-base text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               Temukan jawaban untuk pertanyaan umum tentang layanan undangan digital kami
             </p>
           </div>
