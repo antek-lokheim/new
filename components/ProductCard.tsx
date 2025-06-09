@@ -3,8 +3,8 @@
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import type { Product } from "@/lib/types"
-import { Star, ShoppingCart, Eye, Heart } from "lucide-react"
-import { addToWishlist, removeFromWishlist, isInWishlist, isInCart } from "@/lib/localStorage"
+import { Star, Eye, Heart } from "lucide-react"
+import { addToWishlist, removeFromWishlist, isInWishlist } from "@/lib/localStorage"
 
 interface ProductCardProps {
   product: Product
@@ -12,11 +12,9 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const [inWishlist, setInWishlist] = useState(false)
-  const [inCart, setInCart] = useState(false)
 
   useEffect(() => {
     setInWishlist(isInWishlist(product.id))
-    setInCart(isInCart(product.id))
   }, [product.id])
 
   const handleWishlistToggle = () => {
@@ -68,23 +66,13 @@ export default function ProductCard({ product }: ProductCardProps) {
           <span className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">({product.reviews} ulasan)</span>
         </div>
 
-        <div className="flex gap-2">
-          <Link
-            href={`/products/${product.id}`}
-            className="flex-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors flex items-center justify-center gap-1 text-xs sm:text-sm"
-          >
-            <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
-            Detail
-          </Link>
-          <Link
-            href={`/products/${product.id}`}
-            className={`flex-1 px-3 py-2 rounded-lg transition-colors flex items-center justify-center gap-1 text-xs sm:text-sm 
-              bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700`}
-          >
-            <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" />
-            Tambah ke Keranjang
-          </Link>
-        </div>
+        <Link
+          href={`/products/${product.id}`}
+          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base font-medium"
+        >
+          <Eye className="w-4 h-4" />
+          Lihat Detail
+        </Link>
       </div>
     </div>
   )

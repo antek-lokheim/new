@@ -1,20 +1,12 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { products, pricingPlans } from "@/lib/data"
-import { formatPrice } from "@/lib/utils"
+import { products } from "@/lib/data"
 import { Star, ShoppingCart, Heart, Share2, Eye, Check } from "lucide-react"
 import { notFound } from "next/navigation"
 import PreviewModal from "@/components/preview-modal"
 import AnimatedSection from "@/components/AnimatedSection"
-import {
-  addToCart,
-  addToWishlist,
-  removeFromWishlist,
-  isInWishlist,
-  getCartItems,
-  removeFromCart,
-} from "@/lib/localStorage"
+import { addToCart, addToWishlist, removeFromWishlist, isInWishlist, isInCart } from "@/lib/localStorage"
 
 export default function ProductDetailPage({
   params,
@@ -22,7 +14,6 @@ export default function ProductDetailPage({
   params: { id: string }
 }) {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
-  const [selectedPlan, setSelectedPlan] = useState("premium")
   const [inWishlist, setInWishlist] = useState(false)
   const [inCart, setInCart] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
@@ -33,25 +24,12 @@ export default function ProductDetailPage({
   useEffect(() => {
     if (product) {
       setInWishlist(isInWishlist(product.id))
-      checkCartStatus(product.id)
+      setInCart(isInCart(product.id))
     }
   }, [product])
 
   if (!product) {
     notFound()
-  }
-
-  // Check if product is in cart and get its plan
-  const checkCartStatus = (productId: string) => {
-    const cartItems = getCartItems()
-    const cartItem = cartItems.find((item) => item.productId === productId)
-
-    if (cartItem) {
-      setInCart(true)
-      setSelectedPlan(cartItem.selectedPlan)
-    } else {
-      setInCart(false)
-    }
   }
 
   const handleWishlistToggle = () => {
@@ -66,12 +44,7 @@ export default function ProductDetailPage({
   }
 
   const handleAddToCart = () => {
-    // If product is already in cart, update its plan
-    if (inCart) {
-      removeFromCart(product.id)
-    }
-
-    addToCart(product.id, selectedPlan)
+    addToCart(product.id)
     setInCart(true)
 
     // Show success message
@@ -81,8 +54,6 @@ export default function ProductDetailPage({
 
     window.dispatchEvent(new Event("cartUpdated"))
   }
-
-  const selectedPlanData = pricingPlans.find((plan) => plan.id === selectedPlan)
 
   return (
     <>
@@ -150,47 +121,8 @@ export default function ProductDetailPage({
                 {product.description}
               </p>
 
-              {/* Plan Selection */}
-              <AnimatedSection animation="fade-up" delay={400} className="mb-6 sm:mb-8">
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4 text-sm sm:text-base">
-                  Pilih Paket:
-                </h3>
-                <div className="grid gap-3">
-                  {pricingPlans.map((plan) => (
-                    <label
-                      key={plan.id}
-                      className={`flex items-center p-3 sm:p-4 border rounded-lg cursor-pointer transition-colors ${
-                        selectedPlan === plan.id
-                          ? "border-blue-600 bg-blue-50 dark:bg-blue-900/20"
-                          : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="plan"
-                        value={plan.id}
-                        checked={selectedPlan === plan.id}
-                        onChange={(e) => setSelectedPlan(e.target.value)}
-                        className="sr-only"
-                      />
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="font-semibold text-gray-900 dark:text-white">{plan.name}</span>
-                          <span className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                            {formatPrice(plan.price)}
-                          </span>
-                        </div>
-                        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
-                          {plan.features.slice(0, 2).join(" • ")}
-                        </p>
-                      </div>
-                    </label>
-                  ))}
-                </div>
-              </AnimatedSection>
-
               {/* Features */}
-              <AnimatedSection animation="fade-up" delay={600} className="mb-6 sm:mb-8">
+              <AnimatedSection animation="fade-up" delay={400} className="mb-6 sm:mb-8">
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4 text-sm sm:text-base">
                   Fitur Template:
                 </h3>
@@ -207,7 +139,7 @@ export default function ProductDetailPage({
                 </ul>
               </AnimatedSection>
 
-              <AnimatedSection animation="fade-up" delay={800} className="flex flex-col gap-3 sm:gap-4 mb-6 sm:mb-8">
+              <AnimatedSection animation="fade-up" delay={600} className="flex flex-col gap-3 sm:gap-4 mb-6 sm:mb-8">
                 <button
                   onClick={() => setIsPreviewOpen(true)}
                   className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all flex items-center justify-center gap-2 font-semibold text-sm sm:text-base shadow-lg"
@@ -218,10 +150,15 @@ export default function ProductDetailPage({
                 <div className="flex flex-col sm:flex-row gap-3">
                   <button
                     onClick={handleAddToCart}
-                    className="flex-1 px-6 sm:px-8 py-3 sm:py-4 rounded-lg transition-all flex items-center justify-center gap-2 font-semibold text-sm sm:text-base bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-md hover:shadow-lg"
+                    disabled={inCart}
+                    className={`flex-1 px-6 sm:px-8 py-3 sm:py-4 rounded-lg transition-all flex items-center justify-center gap-2 font-semibold text-sm sm:text-base ${
+                      inCart
+                        ? "bg-green-600 text-white cursor-not-allowed"
+                        : "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-md hover:shadow-lg"
+                    }`}
                   >
                     <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
-                    {inCart ? "Perbarui di Keranjang" : "Tambah ke Keranjang"}
+                    {inCart ? "Sudah di Keranjang" : "Tambah ke Keranjang"}
                   </button>
                   <button
                     onClick={handleWishlistToggle}
@@ -241,25 +178,20 @@ export default function ProductDetailPage({
                 </div>
               </AnimatedSection>
 
-              {selectedPlanData && (
-                <AnimatedSection
-                  animation="fade-up"
-                  delay={1000}
-                  className="border-t border-gray-200 dark:border-gray-700 pt-6 sm:pt-8"
-                >
-                  <h3 className="font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4 text-sm sm:text-base">
-                    Yang Anda Dapatkan dengan Paket {selectedPlanData.name}:
+              <AnimatedSection
+                animation="fade-up"
+                delay={800}
+                className="border-t border-gray-200 dark:border-gray-700 pt-6 sm:pt-8"
+              >
+                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-2 text-sm sm:text-base">
+                    💡 Informasi Pemesanan
                   </h3>
-                  <ul className="space-y-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300">
-                    {selectedPlanData.features.map((feature, index) => (
-                      <li key={index} className="flex items-center gap-2">
-                        <Check className="w-3 h-3 sm:w-4 sm:h-4 text-green-500 flex-shrink-0" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </AnimatedSection>
-              )}
+                  <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">
+                    Setelah menambahkan template ke keranjang, Anda dapat memilih paket yang sesuai di halaman checkout.
+                  </p>
+                </div>
+              </AnimatedSection>
             </AnimatedSection>
           </div>
         </div>

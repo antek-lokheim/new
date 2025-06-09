@@ -1,29 +1,11 @@
-"use client"
-
-import { useState, useEffect } from "react"
 import type { PricingPlan } from "@/lib/types"
 import { Check, Star } from "lucide-react"
-import { setSelectedPlan, getSelectedPlan } from "@/lib/localStorage"
 
 interface PricingCardProps {
   plan: PricingPlan
 }
 
 export default function PricingCard({ plan }: PricingCardProps) {
-  const [isSelected, setIsSelected] = useState(false)
-
-  useEffect(() => {
-    const selectedPlan = getSelectedPlan()
-    setIsSelected(selectedPlan === plan.id)
-  }, [plan.id])
-
-  const handleSelectPlan = () => {
-    setSelectedPlan(plan.id)
-    setIsSelected(true)
-    // Dispatch custom event to update other components
-    window.dispatchEvent(new Event("planSelected"))
-  }
-
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
@@ -90,18 +72,9 @@ export default function PricingCard({ plan }: PricingCardProps) {
             ))}
           </ul>
 
-          <button
-            onClick={handleSelectPlan}
-            className={`w-full py-3 px-4 rounded-lg font-medium transition-all text-sm ${
-              isSelected
-                ? "bg-green-600 text-white"
-                : plan.popular
-                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-md hover:shadow-lg"
-                  : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600"
-            }`}
-          >
-            {isSelected ? "Paket Dipilih" : "Pilih Paket"}
-          </button>
+          <div className="text-center">
+            <p className="text-sm text-gray-500 dark:text-gray-400">Pilih paket ini saat checkout</p>
+          </div>
         </div>
       </div>
     </div>

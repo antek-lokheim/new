@@ -11,17 +11,29 @@ export const getCartItems = (): CartItem[] => {
   }
 }
 
-export const addToCart = (productId: string, selectedPlan: string): void => {
+export const addToCart = (productId: string, selectedPlan?: string): void => {
   if (typeof window === "undefined") return
   const items = getCartItems()
 
   // Remove existing item if it exists
   const filteredItems = items.filter((item) => item.productId !== productId)
 
-  // Add the new item
-  filteredItems.push({ productId, selectedPlan })
+  // Add the new item (selectedPlan is optional now)
+  filteredItems.push({
+    productId,
+    selectedPlan: selectedPlan || "", // Empty string if no plan selected yet
+  })
 
   localStorage.setItem("koleksiqyu-cart", JSON.stringify(filteredItems))
+}
+
+export const updateCartItemPlan = (productId: string, selectedPlan: string): void => {
+  if (typeof window === "undefined") return
+  const items = getCartItems()
+
+  const updatedItems = items.map((item) => (item.productId === productId ? { ...item, selectedPlan } : item))
+
+  localStorage.setItem("koleksiqyu-cart", JSON.stringify(updatedItems))
 }
 
 export const removeFromCart = (productId: string): void => {
@@ -75,24 +87,4 @@ export const isInWishlist = (productId: string): boolean => {
 
 export const isInCart = (productId: string): boolean => {
   return getCartItems().some((item) => item.productId === productId)
-}
-
-// Pricing plan selection functions
-export const getSelectedPlan = (): string | null => {
-  if (typeof window === "undefined") return null
-  try {
-    return localStorage.getItem("koleksiqyu-selected-plan")
-  } catch {
-    return null
-  }
-}
-
-export const setSelectedPlan = (planId: string): void => {
-  if (typeof window === "undefined") return
-  localStorage.setItem("koleksiqyu-selected-plan", planId)
-}
-
-export const clearSelectedPlan = (): void => {
-  if (typeof window === "undefined") return
-  localStorage.removeItem("koleksiqyu-selected-plan")
 }

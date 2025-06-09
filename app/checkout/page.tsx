@@ -7,12 +7,11 @@ import {
   removeFromCart,
   removeFromWishlist,
   clearCart,
-  getSelectedPlan,
-  clearSelectedPlan,
+  updateCartItemPlan,
 } from "@/lib/localStorage"
 import { products, pricingPlans } from "@/lib/data"
 import { formatPrice } from "@/lib/utils"
-import { Trash2, Heart, ShoppingCart, Send, Star } from "lucide-react"
+import { Trash2, Heart, ShoppingCart, Send, AlertCircle } from "lucide-react"
 import AnimatedSection from "@/components/AnimatedSection"
 
 export default function CheckoutPage() {
@@ -20,18 +19,16 @@ export default function CheckoutPage() {
   const [wishlistItems, setWishlistItems] = useState<any[]>([])
   const [customerName, setCustomerName] = useState("")
   const [customerPhone, setCustomerPhone] = useState("")
-  const [selectedPlan, setSelectedPlan] = useState<string>("")
 
   useEffect(() => {
     const loadItems = () => {
       const cart = getCartItems()
       const wishlist = getWishlistItems()
-      const selectedPlan = getSelectedPlan()
 
       const cartWithProducts = cart.map((item) => ({
         ...item,
         product: products.find((p) => p.id === item.productId),
-        plan: pricingPlans.find((p) => p.id === item.selectedPlan),
+        plan: item.selectedPlan ? pricingPlans.find((p) => p.id === item.selectedPlan) : null,
       }))
 
       const wishlistWithProducts = wishlist.map((item) => ({
@@ -41,24 +38,17 @@ export default function CheckoutPage() {
 
       setCartItems(cartWithProducts)
       setWishlistItems(wishlistWithProducts)
-
-      // Set selected plan if exists
-      if (selectedPlan) {
-        setSelectedPlan(selectedPlan)
-      }
     }
 
     loadItems()
 
-    // Listen for storage changes and plan selection
+    // Listen for storage changes
     window.addEventListener("cartUpdated", loadItems)
     window.addEventListener("wishlistUpdated", loadItems)
-    window.addEventListener("planSelected", loadItems)
 
     return () => {
       window.removeEventListener("cartUpdated", loadItems)
       window.removeEventListener("wishlistUpdated", loadItems)
-      window.removeEventListener("planSelected", loadItems)
     }
   }, [])
 
@@ -74,23 +64,31 @@ export default function CheckoutPage() {
     window.dispatchEvent(new Event("wishlistUpdated"))
   }
 
+  const handlePlanChange = (productId: string, planId: string) => {
+    updateCartItemPlan(productId, planId)
+
+    // Update local state
+    setCartItems(
+      cartItems.map((item) =>
+        item.productId === productId
+          ? { ...item, selectedPlan: planId, plan: pricingPlans.find((p) => p.id === planId) }
+          : item,
+      ),
+    )
+  }
+
   const getTotalPrice = () => {
     return cartItems.reduce((total, item) => total + (item.plan?.price || 0), 0)
+  }
+
+  const canProceedToOrder = () => {
+    return cartItems.length > 0 && cartItems.every((item) => item.selectedPlan && item.selectedPlan !== "")
   }
 
   const generateWhatsAppMessage = () => {
     let message = `Halo, saya ingin memesan template undangan dari KoleksiQyu:\n\n`
     message += `Nama: ${customerName}\n`
     message += `No. HP: ${customerPhone}\n\n`
-
-    // Add selected pricing plan if exists
-    if (selectedPlan) {
-      const planData = pricingPlans.find((p) => p.id === selectedPlan)
-      if (planData) {
-        message += `📋 *PAKET DIPILIH:*\n`
-        message += `${planData.name} - ${formatPrice(planData.price)}\n\n`
-      }
-    }
 
     if (cartItems.length > 0) {
       message += `🛒 *TEMPLATE DIPILIH:*\n`
@@ -99,7 +97,7 @@ export default function CheckoutPage() {
         message += `   Paket: ${item.plan?.name} - ${formatPrice(item.plan?.price || 0)}\n`
         message += `   Preview: ${item.product?.previewUrl}\n\n`
       })
-      message += `💰 *Total Template: ${formatPrice(getTotalPrice())}*\n\n`
+      message += `💰 *Total: ${formatPrice(getTotalPrice())}*\n\n`
     }
 
     if (wishlistItems.length > 0) {
@@ -121,25 +119,18 @@ export default function CheckoutPage() {
       return
     }
 
-    if (cartItems.length === 0 && wishlistItems.length === 0 && !selectedPlan) {
-      alert("Pilih template atau paket terlebih dahulu")
+    if (!canProceedToOrder()) {
+      alert("Mohon pilih paket untuk semua template di keranjang")
       return
     }
 
     const message = generateWhatsAppMessage()
     const whatsappUrl = `https://wa.me/6285645251595?text=${message}`
 
-    // Clear cart and selected plan after sending
-    if (cartItems.length > 0) {
-      clearCart()
-      setCartItems([])
-      window.dispatchEvent(new Event("cartUpdated"))
-    }
-
-    if (selectedPlan) {
-      clearSelectedPlan()
-      setSelectedPlan("")
-    }
+    // Clear cart after sending
+    clearCart()
+    setCartItems([])
+    window.dispatchEvent(new Event("cartUpdated"))
 
     window.open(whatsappUrl, "_blank")
   }
@@ -151,48 +142,12 @@ export default function CheckoutPage() {
           <div className="text-center mb-12">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">Checkout</h1>
             <p className="text-xl text-gray-600 dark:text-gray-300">
-              Review pesanan Anda dan lanjutkan ke WhatsApp untuk pemesanan
+              Pilih paket untuk setiap template dan lanjutkan ke WhatsApp untuk pemesanan
             </p>
           </div>
         </AnimatedSection>
 
         <div className="grid lg:grid-cols-3 gap-8">
-          {selectedPlan && (
-            <AnimatedSection animation="fade-up" delay={100}>
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700 mb-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <Star className="w-5 h-5 text-yellow-500" />
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Paket Dipilih</h2>
-                </div>
-                {(() => {
-                  const planData = pricingPlans.find((p) => p.id === selectedPlan)
-                  return planData ? (
-                    <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                      <div className="flex justify-between items-center mb-2">
-                        <h3 className="font-semibold text-gray-900 dark:text-white">{planData.name}</h3>
-                        <span className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                          {formatPrice(planData.price)}
-                        </span>
-                      </div>
-                      <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                        {planData.features.slice(0, 3).join(" • ")}
-                      </p>
-                      <button
-                        onClick={() => {
-                          clearSelectedPlan()
-                          setSelectedPlan("")
-                        }}
-                        className="text-red-500 hover:text-red-700 text-sm"
-                      >
-                        Hapus Paket
-                      </button>
-                    </div>
-                  ) : null
-                })()}
-              </div>
-            </AnimatedSection>
-          )}
-
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-6">
             {cartItems.length > 0 && (
@@ -204,36 +159,82 @@ export default function CheckoutPage() {
                       Keranjang ({cartItems.length})
                     </h2>
                   </div>
-                  <div className="space-y-4">
+
+                  {!canProceedToOrder() && (
+                    <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 mb-6">
+                      <div className="flex items-center gap-2">
+                        <AlertCircle className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
+                        <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                          Mohon pilih paket untuk semua template sebelum melanjutkan pemesanan.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="space-y-6">
                     {cartItems.map((item) => (
-                      <div
-                        key={item.productId}
-                        className="flex gap-4 p-4 border border-gray-200 dark:border-gray-700 rounded-lg"
-                      >
-                        <img
-                          src={item.product?.imageUrl || "/placeholder.svg"}
-                          alt={item.product?.name}
-                          className="w-16 h-16 object-cover rounded-lg"
-                        />
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-gray-900 dark:text-white">{item.product?.name}</h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-300 capitalize">
-                            Tema: {item.product?.theme}
-                          </p>
-                          <p className="text-sm font-medium text-blue-600">
-                            Paket: {item.plan?.name} - {formatPrice(item.plan?.price || 0)}
-                          </p>
+                      <div key={item.productId} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                        <div className="flex gap-4 mb-4">
+                          <img
+                            src={item.product?.imageUrl || "/placeholder.svg"}
+                            alt={item.product?.name}
+                            className="w-16 h-16 object-cover rounded-lg"
+                          />
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-gray-900 dark:text-white">{item.product?.name}</h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-300 capitalize">
+                              Tema: {item.product?.theme}
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => handleRemoveFromCart(item.productId)}
+                            className="text-red-500 hover:text-red-700 p-2"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                         </div>
-                        <button
-                          onClick={() => handleRemoveFromCart(item.productId)}
-                          className="text-red-500 hover:text-red-700 p-2"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+
+                        {/* Package Selection */}
+                        <div>
+                          <h4 className="font-medium text-gray-900 dark:text-white mb-3">Pilih Paket:</h4>
+                          <div className="grid gap-2">
+                            {pricingPlans.map((plan) => (
+                              <label
+                                key={plan.id}
+                                className={`flex items-center p-3 border rounded-lg cursor-pointer transition-colors ${
+                                  item.selectedPlan === plan.id
+                                    ? "border-blue-600 bg-blue-50 dark:bg-blue-900/20"
+                                    : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
+                                }`}
+                              >
+                                <input
+                                  type="radio"
+                                  name={`plan-${item.productId}`}
+                                  value={plan.id}
+                                  checked={item.selectedPlan === plan.id}
+                                  onChange={(e) => handlePlanChange(item.productId, e.target.value)}
+                                  className="sr-only"
+                                />
+                                <div className="flex-1">
+                                  <div className="flex items-center justify-between">
+                                    <span className="font-medium text-gray-900 dark:text-white">{plan.name}</span>
+                                    <span className="font-bold text-blue-600 dark:text-blue-400">
+                                      {formatPrice(plan.price)}
+                                    </span>
+                                  </div>
+                                  <p className="text-xs text-gray-600 dark:text-gray-300">
+                                    {plan.features.slice(0, 2).join(" • ")}
+                                  </p>
+                                </div>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>
-                  <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+
+                  <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-6">
                     <div className="flex justify-between items-center">
                       <span className="text-lg font-semibold text-gray-900 dark:text-white">Total:</span>
                       <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -288,7 +289,7 @@ export default function CheckoutPage() {
               </AnimatedSection>
             )}
 
-            {cartItems.length === 0 && wishlistItems.length === 0 && !selectedPlan && (
+            {cartItems.length === 0 && wishlistItems.length === 0 && (
               <AnimatedSection animation="fade-up" delay={200}>
                 <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-12 text-center border border-gray-200 dark:border-gray-700">
                   <ShoppingCart className="w-16 h-16 text-gray-400 mx-auto mb-4" />
@@ -345,11 +346,7 @@ export default function CheckoutPage() {
 
                 <button
                   onClick={handleSendToWhatsApp}
-                  disabled={
-                    !customerName ||
-                    !customerPhone ||
-                    (cartItems.length === 0 && wishlistItems.length === 0 && !selectedPlan)
-                  }
+                  disabled={!customerName || !customerPhone || !canProceedToOrder()}
                   className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all flex items-center justify-center gap-2 font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Send className="w-5 h-5" />
