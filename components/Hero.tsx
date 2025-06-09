@@ -91,26 +91,27 @@ export default function Hero() {
         </div>
 
         {/* Desktop layout (grid) */}
-        <div className="hidden lg:grid lg:grid-cols-2 lg:gap-12 lg:items-center">
-          <AnimatedSection animation="fade-right">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-xs sm:text-sm font-medium mb-4 sm:mb-6">
-              <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
+        <div className="hidden lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center lg:min-h-[600px]">
+          {/* Text Content - Left Side */}
+          <AnimatedSection animation="fade-right" className="flex flex-col justify-center">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium mb-6">
+              <Sparkles className="w-4 h-4" />
               Template Undangan Digital Terbaik
             </div>
-            <h1 className="text-4xl xl:text-5xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 leading-tight">
+            <h1 className="text-4xl xl:text-5xl 2xl:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
               Undangan Pernikahan
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent block">
                 Digital Terbaik
               </span>
             </h1>
-            <p className="text-lg xl:text-xl text-gray-600 dark:text-gray-300 mb-6 sm:mb-8 leading-relaxed">
+            <p className="text-lg xl:text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed max-w-lg">
               Buat undangan pernikahan digital yang memukau dengan template premium kami. Mudah dikustomisasi,
               responsive, dan siap pakai dalam hitungan menit.
             </p>
             <div className="flex gap-4">
               <Link
                 href="/products"
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all flex items-center justify-center gap-2 font-semibold text-base shadow-lg hover:shadow-xl"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all flex items-center justify-center gap-2 font-semibold text-base shadow-lg hover:shadow-xl transform hover:scale-105"
               >
                 Lihat Template
                 <ArrowRight className="w-5 h-5" />
@@ -120,7 +121,7 @@ export default function Hero() {
                   href={featuredProduct.previewUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-8 py-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 font-semibold text-base"
+                  className="border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-8 py-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-all flex items-center justify-center gap-2 font-semibold text-base hover:border-blue-500 dark:hover:border-blue-400"
                 >
                   <Play className="w-5 h-5" />
                   Lihat Demo
@@ -128,8 +129,10 @@ export default function Hero() {
               )}
             </div>
           </AnimatedSection>
-          <AnimatedSection animation="fade-left" delay={200}>
-            <div className="relative">
+
+          {/* Image Content - Right Side */}
+          <AnimatedSection animation="fade-left" delay={200} className="flex justify-center lg:justify-end">
+            <div className="relative max-w-lg w-full">
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 border border-gray-200 dark:border-gray-700 transform hover:scale-[1.02] transition-transform duration-300">
                 {featuredProduct ? (
                   <img
@@ -145,9 +148,12 @@ export default function Hero() {
                   />
                 )}
               </div>
-              <div className="absolute -top-4 -right-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full font-semibold text-sm shadow-lg">
+              <div className="absolute -top-4 -right-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full font-semibold text-sm shadow-lg animate-pulse">
                 Terbaru!
               </div>
+              {/* Decorative elements */}
+              <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full opacity-20 blur-xl"></div>
+              <div className="absolute -top-8 -left-8 w-16 h-16 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full opacity-20 blur-xl"></div>
             </div>
           </AnimatedSection>
         </div>
