@@ -81,7 +81,7 @@ export default function Navbar() {
         <div className="flex justify-between h-14 sm:h-16">
           <div className="flex items-center">
             <Link href="/" className="flex items-center gap-2">
-              <div className="bg-brand-indigo p-1 rounded-md">
+              <div className="bg-blue-950 p-1 rounded-md">
                 <img src="/logo.svg" alt="KoleksiQyu" className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
               <span className="text-lg sm:text-xl font-bold bg-gradient-to-r from-brand-pink to-brand-indigo bg-clip-text text-transparent">

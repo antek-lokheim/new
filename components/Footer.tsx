@@ -18,7 +18,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-3 sm:mb-4">
-              <div className="bg-brand-indigo p-1.5 rounded-md">
+              <div className="bg-blue-950 p-1.5 rounded-md">
                 <img src="/logo.svg" alt="KoleksiQyu" className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
               <h3 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-brand-pink to-brand-indigo bg-clip-text text-transparent">

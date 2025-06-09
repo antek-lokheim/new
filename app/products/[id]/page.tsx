@@ -24,6 +24,7 @@ export default function ProductDetailPage({
   const [inWishlist, setInWishlist] = useState(false)
   const [inCart, setInCart] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [showCopySuccess, setShowCopySuccess] = useState(false)
 
   const product = products.find((p) => p.id === params.id)
 
@@ -91,7 +92,10 @@ export default function ProductDetailPage({
       // Fallback for browsers that don't support Web Share API
       navigator.clipboard
         .writeText(window.location.href)
-        .then(() => alert("Link produk telah disalin ke clipboard!"))
+        .then(() => {
+          setShowCopySuccess(true)
+          setTimeout(() => setShowCopySuccess(false), 2000) // Hide after 2 seconds
+        })
         .catch((err) => console.error("Failed to copy link: ", err))
     }
   }
@@ -219,7 +223,7 @@ export default function ProductDetailPage({
                   <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
                   Preview Template
                 </button>
-                <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex flex-col sm:flex-row gap-3 relative">
                   <button
                     onClick={handleCartAction}
                     disabled={showSuccess}
@@ -245,6 +249,11 @@ export default function ProductDetailPage({
                     <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
                     Bagikan
                   </button>
+                  {showCopySuccess && (
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg text-sm shadow-lg animate-fade-in-up">
+                      Tersalin ke clipboard!
+                    </div>
+                  )}
                 </div>
               </AnimatedSection>
 
