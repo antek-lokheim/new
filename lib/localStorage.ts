@@ -14,15 +14,14 @@ export const getCartItems = (): CartItem[] => {
 export const addToCart = (productId: string, selectedPlan: string): void => {
   if (typeof window === "undefined") return
   const items = getCartItems()
-  const existingItem = items.find((item) => item.productId === productId)
 
-  if (existingItem) {
-    existingItem.selectedPlan = selectedPlan
-  } else {
-    items.push({ productId, selectedPlan })
-  }
+  // Remove existing item if it exists
+  const filteredItems = items.filter((item) => item.productId !== productId)
 
-  localStorage.setItem("koleksiqyu-cart", JSON.stringify(items))
+  // Add the new item
+  filteredItems.push({ productId, selectedPlan })
+
+  localStorage.setItem("koleksiqyu-cart", JSON.stringify(filteredItems))
 }
 
 export const removeFromCart = (productId: string): void => {
@@ -34,6 +33,12 @@ export const removeFromCart = (productId: string): void => {
 export const clearCart = (): void => {
   if (typeof window === "undefined") return
   localStorage.removeItem("koleksiqyu-cart")
+}
+
+export const getCartItemPlan = (productId: string): string | null => {
+  const items = getCartItems()
+  const item = items.find((item) => item.productId === productId)
+  return item ? item.selectedPlan : null
 }
 
 // Wishlist functions

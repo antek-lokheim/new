@@ -7,7 +7,14 @@ import { Star, ShoppingCart, Heart, Share2, Eye, Check } from "lucide-react"
 import { notFound } from "next/navigation"
 import PreviewModal from "@/components/preview-modal"
 import AnimatedSection from "@/components/AnimatedSection"
-import { addToCart, addToWishlist, removeFromWishlist, isInWishlist, isInCart } from "@/lib/localStorage"
+import {
+  addToCart,
+  addToWishlist,
+  removeFromWishlist,
+  isInWishlist,
+  getCartItems,
+  removeFromCart,
+} from "@/lib/localStorage"
 
 export default function ProductDetailPage({
   params,
@@ -18,18 +25,33 @@ export default function ProductDetailPage({
   const [selectedPlan, setSelectedPlan] = useState("premium")
   const [inWishlist, setInWishlist] = useState(false)
   const [inCart, setInCart] = useState(false)
+  const [showAlert, setShowAlert] = useState(false)
+  const [alertMessage, setAlertMessage] = useState("")
 
   const product = products.find((p) => p.id === params.id)
 
   useEffect(() => {
     if (product) {
       setInWishlist(isInWishlist(product.id))
-      setInCart(isInCart(product.id))
+      checkCartStatus(product.id)
     }
   }, [product])
 
   if (!product) {
     notFound()
+  }
+
+  // Check if product is in cart and get its plan
+  const checkCartStatus = (productId: string) => {
+    const cartItems = getCartItems()
+    const cartItem = cartItems.find((item) => item.productId === productId)
+
+    if (cartItem) {
+      setInCart(true)
+      setSelectedPlan(cartItem.selectedPlan)
+    } else {
+      setInCart(false)
+    }
   }
 
   const handleWishlistToggle = () => {
@@ -44,8 +66,19 @@ export default function ProductDetailPage({
   }
 
   const handleAddToCart = () => {
+    // If product is already in cart, update its plan
+    if (inCart) {
+      removeFromCart(product.id)
+    }
+
     addToCart(product.id, selectedPlan)
     setInCart(true)
+
+    // Show success message
+    setAlertMessage("Template berhasil ditambahkan ke keranjang!")
+    setShowAlert(true)
+    setTimeout(() => setShowAlert(false), 3000)
+
     window.dispatchEvent(new Event("cartUpdated"))
   }
 
@@ -55,6 +88,14 @@ export default function ProductDetailPage({
     <>
       <div className="py-8 sm:py-20 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Alert message */}
+          {showAlert && (
+            <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2">
+              <Check className="w-5 h-5" />
+              {alertMessage}
+            </div>
+          )}
+
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
             {/* Product Image */}
             <AnimatedSection
@@ -177,15 +218,10 @@ export default function ProductDetailPage({
                 <div className="flex flex-col sm:flex-row gap-3">
                   <button
                     onClick={handleAddToCart}
-                    disabled={inCart}
-                    className={`flex-1 px-6 sm:px-8 py-3 sm:py-4 rounded-lg transition-all flex items-center justify-center gap-2 font-semibold text-sm sm:text-base ${
-                      inCart
-                        ? "bg-gray-400 text-white cursor-not-allowed"
-                        : "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700"
-                    }`}
+                    className="flex-1 px-6 sm:px-8 py-3 sm:py-4 rounded-lg transition-all flex items-center justify-center gap-2 font-semibold text-sm sm:text-base bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-md hover:shadow-lg"
                   >
                     <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
-                    {inCart ? "Sudah di Keranjang" : "Tambah ke Keranjang"}
+                    {inCart ? "Perbarui di Keranjang" : "Tambah ke Keranjang"}
                   </button>
                   <button
                     onClick={handleWishlistToggle}

@@ -3,8 +3,8 @@
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import type { Product } from "@/lib/types"
-import { Star, ShoppingCart, Eye, Heart, Plus } from "lucide-react"
-import { addToWishlist, removeFromWishlist, isInWishlist, addToCart, isInCart } from "@/lib/localStorage"
+import { Star, ShoppingCart, Eye, Heart } from "lucide-react"
+import { addToWishlist, removeFromWishlist, isInWishlist, isInCart } from "@/lib/localStorage"
 
 interface ProductCardProps {
   product: Product
@@ -29,14 +29,6 @@ export default function ProductCard({ product }: ProductCardProps) {
     }
     // Dispatch custom event to update navbar counts
     window.dispatchEvent(new Event("wishlistUpdated"))
-  }
-
-  const handleAddToCart = () => {
-    // Default to premium plan when adding directly from card
-    addToCart(product.id, "premium")
-    setInCart(true)
-    // Dispatch custom event to update navbar counts
-    window.dispatchEvent(new Event("cartUpdated"))
   }
 
   return (
@@ -84,27 +76,14 @@ export default function ProductCard({ product }: ProductCardProps) {
             <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
             Detail
           </Link>
-          <button
-            onClick={handleAddToCart}
-            disabled={inCart}
-            className={`flex-1 px-3 py-2 rounded-lg transition-colors flex items-center justify-center gap-1 text-xs sm:text-sm ${
-              inCart
-                ? "bg-green-600 text-white cursor-not-allowed"
-                : "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700"
-            }`}
+          <Link
+            href={`/products/${product.id}`}
+            className={`flex-1 px-3 py-2 rounded-lg transition-colors flex items-center justify-center gap-1 text-xs sm:text-sm 
+              bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700`}
           >
-            {inCart ? (
-              <>
-                <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" />
-                Di Keranjang
-              </>
-            ) : (
-              <>
-                <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
-                Tambah ke Keranjang
-              </>
-            )}
-          </button>
+            <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" />
+            Tambah ke Keranjang
+          </Link>
         </div>
       </div>
     </div>
