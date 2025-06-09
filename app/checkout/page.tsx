@@ -8,6 +8,7 @@ import {
   removeFromWishlist,
   clearCart,
   updateCartItemPlan,
+  addToCart, // Add this import
 } from "@/lib/localStorage"
 import { products, pricingPlans } from "@/lib/data"
 import { formatPrice } from "@/lib/utils"
@@ -281,12 +282,34 @@ export default function CheckoutPage() {
                             Ditambahkan: {new Date(item.addedAt).toLocaleDateString("id-ID")}
                           </p>
                         </div>
-                        <button
-                          onClick={() => handleRemoveFromWishlist(item.productId)}
-                          className="text-red-500 hover:text-red-700 p-2"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        <div className="flex flex-col gap-2">
+                          <button
+                            onClick={() => {
+                              // Add to cart
+                              addToCart(item.productId)
+                              // Remove from wishlist
+                              removeFromWishlist(item.productId)
+                              // Update local states
+                              setCartItems([
+                                ...cartItems,
+                                { productId: item.productId, selectedPlan: "", product: item.product, plan: null },
+                              ])
+                              setWishlistItems(wishlistItems.filter((w) => w.productId !== item.productId))
+                              // Dispatch events
+                              window.dispatchEvent(new Event("cartUpdated"))
+                              window.dispatchEvent(new Event("wishlistUpdated"))
+                            }}
+                            className="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700 transition-colors"
+                          >
+                            Pindah ke Keranjang
+                          </button>
+                          <button
+                            onClick={() => handleRemoveFromWishlist(item.productId)}
+                            className="text-red-500 hover:text-red-700 p-1"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
