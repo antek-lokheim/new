@@ -1,10 +1,11 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useRef, useState } from "react"
 import { notFound } from "next/navigation"
-import { BookOpen, Video, FileText, ArrowLeft } from "lucide-react"
+import { BookOpen, Video, FileText, ArrowLeft, ArrowRight } from "lucide-react"
 import Link from "next/link"
 import AnimatedSection from "@/components/AnimatedSection"
+import { cn } from "@/lib/utils"
 
 // Tutorial data
 const tutorials = [
@@ -60,7 +61,7 @@ const tutorials = [
         <li>Integrasi dengan media sosial</li>
       </ul>
       
-      <p>Prioritaskan template yang menyediakan fitur-fitur yang Anda butuhkan.</p>
+      <p>Prioritaskan template yang menyediakan fitur-fitur yang Anda butuhkan.</</p>
       
       <h3>Kesimpulan</h3>
       
@@ -486,122 +487,202 @@ const tutorials = [
   },
 ]
 
+// Helper to generate slug from text
+const slugify = (text: string) => {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9 -]/g, "") // Remove invalid chars
+    .replace(/\s+/g, "-") // Replace spaces with -
+    .replace(/-+/g, "-") // Collapse dashes
+}
+
+interface Heading {
+  id: string
+  text: string
+  level: number
+}
+
 export default function TutorialDetailPage({ params }: { params: { id: string } }) {
-  const tutorial = tutorials.find((t) => t.id === params.id)
+  const tutorialIndex = tutorials.findIndex((t) => t.id === params.id)
+  const tutorial = tutorials[tutorialIndex]
+
+  const contentRef = useRef<HTMLDivElement>(null)
+  const [headings, setHeadings] = useState<Heading[]>([])
 
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
+
+  useEffect(() => {
+    if (contentRef.current) {
+      const extractedHeadings: Heading[] = []
+      contentRef.current.querySelectorAll("h2, h3").forEach((headingElement) => {
+        const text = headingElement.textContent || ""
+        let id = headingElement.id
+
+        if (!id) {
+          id = slugify(text)
+          headingElement.id = id // Assign ID to the DOM element for direct linking
+        }
+        extractedHeadings.push({
+          id,
+          text,
+          level: Number.parseInt(headingElement.tagName.substring(1)),
+        })
+      })
+      setHeadings(extractedHeadings)
+    }
+  }, [tutorial]) // Re-extract headings if tutorial changes
 
   if (!tutorial) {
     notFound()
   }
 
   const IconComponent = tutorial.icon
+  const prevTutorial = tutorials[tutorialIndex - 1]
+  const nextTutorial = tutorials[tutorialIndex + 1]
+
+  const handleScrollToHeading = (id: string) => {
+    const element = document.getElementById(id)
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" })
+    }
+  }
 
   return (
-    <div className="py-20 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <AnimatedSection animation="fade-up">
-          <div className="mb-8">
-            <Link
-              href="/tutorial"
-              className="inline-flex items-center text-brand-indigo dark:text-brand-indigo-light hover:text-brand-indigo/90 dark:hover:text-brand-indigo-light/90 mb-6"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Kembali ke Tutorial
-            </Link>
+    <div className="py-12 sm:py-20 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
+        {/* Main Content Area */}
+        <div>
+          <AnimatedSection animation="fade-up">
+            <div className="mb-8">
+              <Link
+                href="/tutorial"
+                className="inline-flex items-center text-brand-indigo dark:text-brand-indigo-light hover:text-brand-indigo/90 dark:hover:text-brand-indigo-light/90 mb-6 font-medium"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Kembali ke Tutorial
+              </Link>
 
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sm:p-8 border border-gray-200 dark:border-gray-700 mb-8">
-              <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-6 md:gap-8 mb-6">
-                <div className="flex items-center justify-center md:justify-start">
-                  <div className="bg-brand-indigo-light dark:bg-brand-indigo/30 p-4 rounded-xl flex-shrink-0">
-                    <IconComponent className="w-8 h-8 text-brand-indigo dark:text-brand-indigo-light" />
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sm:p-8 border border-gray-200 dark:border-gray-700 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-6 md:gap-8 mb-6">
+                  <div className="flex items-center justify-center md:justify-start">
+                    <div className="bg-brand-indigo-light dark:bg-brand-indigo/30 p-4 rounded-xl flex-shrink-0">
+                      <IconComponent className="w-8 h-8 text-brand-indigo dark:text-brand-indigo-light" />
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <div className="flex flex-wrap items-center gap-3 mb-2">
-                    <span className="text-sm font-medium text-brand-indigo dark:text-brand-indigo-light bg-brand-indigo-light dark:bg-brand-indigo/30 px-3 py-1 rounded-full">
-                      {tutorial.category}
-                    </span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">• {tutorial.time}</span>
+                  <div>
+                    <div className="flex flex-wrap items-center gap-3 mb-2">
+                      <span className="text-sm font-medium text-brand-indigo dark:text-brand-indigo-light bg-brand-indigo-light dark:bg-brand-indigo/30 px-3 py-1 rounded-full">
+                        {tutorial.category}
+                      </span>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">• {tutorial.time}</span>
+                    </div>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white leading-tight">
+                      {tutorial.title}
+                    </h1>
+                    <p className="text-gray-600 dark:text-gray-300 mt-2 text-base">{tutorial.description}</p>
                   </div>
-                  <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white leading-tight">
-                    {tutorial.title}
-                  </h1>
-                  <p className="text-gray-600 dark:text-gray-300 mt-2 text-base">{tutorial.description}</p>
                 </div>
               </div>
             </div>
-          </div>
-        </AnimatedSection>
+          </AnimatedSection>
 
-        <AnimatedSection animation="fade-up" delay={200}>
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div
-              className="prose prose-lg max-w-none p-6 sm:p-8 dark:prose-invert
-            prose-headings:text-gray-900 dark:prose-headings:text-white
-            prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:mb-4
-            prose-ul:text-gray-700 dark:prose-ul:text-gray-300 prose-ul:mb-4 prose-li:mb-2 prose-li:marker:text-brand-indigo
-            prose-ol:text-gray-700 dark:prose-ol:text-gray-300 prose-ol:mb-4 prose-ol:marker:text-brand-indigo
-            prose-strong:text-gray-900 dark:prose-strong:text-white
-            prose-a:text-brand-indigo hover:prose-a:underline"
-              dangerouslySetInnerHTML={{ __html: tutorial.content }}
-            />
-          </div>
-        </AnimatedSection>
-
-        <AnimatedSection animation="fade-up" delay={300}>
-          <div className="mt-8 flex justify-between items-center">
-            {tutorials[tutorials.findIndex((t) => t.id === params.id) - 1] ? (
-              <Link
-                href={`/tutorial/${tutorials[tutorials.findIndex((t) => t.id === params.id) - 1].id}`}
-                className="inline-flex items-center text-brand-indigo dark:text-brand-indigo-light hover:text-brand-indigo/90 dark:hover:text-brand-indigo-light/90"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Tutorial Sebelumnya
-              </Link>
-            ) : (
-              <div /> // Empty div to maintain spacing
-            )}
-            {tutorials[tutorials.findIndex((t) => t.id === params.id) + 1] ? (
-              <Link
-                href={`/tutorial/${tutorials[tutorials.findIndex((t) => t.id === params.id) + 1].id}`}
-                className="inline-flex items-center text-brand-indigo dark:text-brand-indigo-light hover:text-brand-indigo/90 dark:hover:text-brand-indigo-light/90"
-              >
-                Tutorial Berikutnya
-                <ArrowLeft className="w-4 h-4 ml-2 rotate-180" />
-              </Link>
-            ) : (
-              <div /> // Empty div to maintain spacing
-            )}
-          </div>
-        </AnimatedSection>
-
-        <AnimatedSection animation="fade-up" delay={400}>
-          <div className="mt-12 text-center bg-gradient-to-r from-brand-pink-light to-brand-purple-light dark:from-brand-pink/10 dark:to-brand-purple/10 p-8 rounded-xl border border-gray-200 dark:border-gray-700">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Butuh Bantuan Lebih Lanjut?</h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
-              Jika Anda memiliki pertanyaan atau membutuhkan bantuan lebih lanjut, jangan ragu untuk menghubungi tim
-              support kami.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/faq"
-                className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-6 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border border-gray-200 dark:border-gray-700"
-              >
-                Lihat FAQ
-              </Link>
-              <Link
-                href="/bantuan"
-                className="bg-gradient-to-r from-brand-pink to-brand-indigo text-white px-6 py-3 rounded-lg hover:from-brand-pink/90 hover:to-brand-indigo/90 transition-all"
-              >
-                Hubungi Support
-              </Link>
+          <AnimatedSection animation="fade-up" delay={200}>
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <div
+                ref={contentRef} // Reference for content parsing
+                className="prose prose-lg max-w-none p-6 sm:p-8 dark:prose-invert
+              prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-bold prose-headings:mt-8 prose-headings:mb-4
+              prose-h2:text-2xl prose-h3:text-xl
+              prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-4
+              prose-ul:text-gray-700 dark:prose-ul:text-gray-300 prose-ul:mb-4 prose-li:mb-2 prose-li:marker:text-brand-indigo
+              prose-ol:text-gray-700 dark:prose-ol:text-gray-300 prose-ol:mb-4 prose-ol:marker:text-brand-indigo
+              prose-strong:text-gray-900 dark:prose-strong:text-white
+              prose-a:text-brand-indigo hover:prose-a:underline
+              prose-img:rounded-lg prose-img:shadow-md prose-img:mx-auto prose-img:my-6"
+                dangerouslySetInnerHTML={{ __html: tutorial.content }}
+              />
             </div>
+          </AnimatedSection>
+
+          <AnimatedSection animation="fade-up" delay={300}>
+            <div className="mt-8 flex justify-between items-center">
+              {prevTutorial ? (
+                <Link
+                  href={`/tutorial/${prevTutorial.id}`}
+                  className="inline-flex items-center text-brand-indigo dark:text-brand-indigo-light hover:text-brand-indigo/90 dark:hover:text-brand-indigo-light/90 font-medium"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  {prevTutorial.title}
+                </Link>
+              ) : (
+                <div /> // Empty div to maintain spacing
+              )}
+              {nextTutorial ? (
+                <Link
+                  href={`/tutorial/${nextTutorial.id}`}
+                  className="inline-flex items-center text-brand-indigo dark:text-brand-indigo-light hover:text-brand-indigo/90 dark:hover:text-brand-indigo-light/90 font-medium"
+                >
+                  {nextTutorial.title}
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Link>
+              ) : (
+                <div /> // Empty div to maintain spacing
+              )}
+            </div>
+          </AnimatedSection>
+        </div>
+
+        {/* Sidebar / Table of Contents */}
+        <AnimatedSection animation="fade-left" delay={250}>
+          <div className="hidden lg:block sticky top-20 h-fit bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Daftar Isi</h3>
+            <nav>
+              <ul className="space-y-2">
+                {headings.map((heading) => (
+                  <li key={heading.id} className={cn(heading.level === 3 && "ml-4")}>
+                    <a
+                      href={`#${heading.id}`}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        handleScrollToHeading(heading.id)
+                      }}
+                      className="text-gray-600 dark:text-gray-300 hover:text-brand-indigo dark:hover:text-brand-indigo-light transition-colors text-sm"
+                    >
+                      {heading.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
         </AnimatedSection>
       </div>
+
+      <AnimatedSection animation="fade-up" delay={400}>
+        <div className="mt-12 text-center bg-gradient-to-r from-brand-pink-light to-brand-purple-light dark:from-brand-pink/10 dark:to-brand-purple/10 p-8 rounded-xl border border-gray-200 dark:border-gray-700 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Butuh Bantuan Lebih Lanjut?</h2>
+          <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
+            Jika Anda memiliki pertanyaan atau membutuhkan bantuan lebih lanjut, jangan ragu untuk menghubungi tim
+            support kami.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/faq"
+              className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-6 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border border-gray-200 dark:border-gray-700"
+            >
+              Lihat FAQ
+            </Link>
+            <Link
+              href="/bantuan"
+              className="bg-gradient-to-r from-brand-pink to-brand-indigo text-white px-6 py-3 rounded-lg hover:from-brand-pink/90 hover:to-brand-indigo/90 transition-all"
+            >
+              Hubungi Support
+            </Link>
+          </div>
+        </div>
+      </AnimatedSection>
     </div>
   )
 }
