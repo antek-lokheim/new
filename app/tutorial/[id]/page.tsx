@@ -61,7 +61,7 @@ const tutorials = [
         <li>Integrasi dengan media sosial</li>
       </ul>
       
-      <p>Prioritaskan template yang menyediakan fitur-fitur yang Anda butuhkan.</</p>
+      <p>Prioritaskan template yang menyediakan fitur-fitur yang Anda butuhkan.</p>
       
       <h3>Kesimpulan</h3>
       
