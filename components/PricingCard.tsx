@@ -43,7 +43,7 @@ export default function PricingCard({ plan }: PricingCardProps) {
           <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{plan.name}</h3>
           <div className="mb-1">
             <span
-              className={`text-2xl sm:text-3xl font-bold ${
+              className={`text-4xl font-extrabold ${
                 plan.popular
                   ? "bg-gradient-to-r from-brand-pink to-brand-indigo bg-clip-text text-transparent"
                   : "text-gray-900 dark:text-white"
@@ -52,6 +52,7 @@ export default function PricingCard({ plan }: PricingCardProps) {
               {formatPrice(plan.price)}
             </span>
           </div>
+          <p className="text-sm text-gray-500 dark:text-gray-400">/{plan.period}</p>
         </div>
 
         <div className="p-6 flex flex-col flex-1">
@@ -76,7 +77,9 @@ export default function PricingCard({ plan }: PricingCardProps) {
             ))}
           </ul>
 
-          <div className="text-center">
+          <div className="text-center mt-auto">
+            {" "}
+            {/* Use mt-auto to push to bottom */}
             <p className="text-sm text-gray-500 dark:text-gray-400">Pilih paket ini saat checkout</p>
           </div>
         </div>
