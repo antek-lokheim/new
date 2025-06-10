@@ -592,9 +592,9 @@ export default function TutorialDetailPage({ params }: { params: { id: string } 
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
               <div
                 ref={contentRef} // Reference for content parsing
-                className="prose prose-xl max-w-none p-6 sm:p-8 dark:prose-invert
-              prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-extrabold prose-headings:mt-10 prose-headings:mb-4
-              prose-h2:text-3xl prose-h3:text-2xl
+                className="prose prose-base max-w-none p-6 sm:p-8 dark:prose-invert
+              prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-bold prose-headings:mt-10 prose-headings:mb-4
+              prose-h2:text-2xl prose-h3:text-xl
               prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-6
               prose-ul:list-disc prose-ul:pl-6 prose-ul:text-gray-700 dark:prose-ul:text-gray-300 prose-ul:mb-6 prose-li:mb-2 prose-li:marker:text-brand-indigo
               prose-ol:list-decimal prose-ol:pl-6 prose-ol:text-gray-700 dark:prose-ol:text-gray-300 prose-ol:mb-6 prose-ol:marker:text-brand-indigo
