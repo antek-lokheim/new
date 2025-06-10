@@ -592,15 +592,15 @@ export default function TutorialDetailPage({ params }: { params: { id: string } 
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
               <div
                 ref={contentRef} // Reference for content parsing
-                className="prose prose-lg max-w-none p-6 sm:p-8 dark:prose-invert
-              prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-bold prose-headings:mt-8 prose-headings:mb-4
-              prose-h2:text-2xl prose-h3:text-xl
-              prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-4
-              prose-ul:text-gray-700 dark:prose-ul:text-gray-300 prose-ul:mb-4 prose-li:mb-2 prose-li:marker:text-brand-indigo
-              prose-ol:text-gray-700 dark:prose-ol:text-gray-300 prose-ol:mb-4 prose-ol:marker:text-brand-indigo
+                className="prose prose-xl max-w-none p-6 sm:p-8 dark:prose-invert
+              prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-extrabold prose-headings:mt-10 prose-headings:mb-4
+              prose-h2:text-3xl prose-h3:text-2xl
+              prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-6
+              prose-ul:list-disc prose-ul:pl-6 prose-ul:text-gray-700 dark:prose-ul:text-gray-300 prose-ul:mb-6 prose-li:mb-2 prose-li:marker:text-brand-indigo
+              prose-ol:list-decimal prose-ol:pl-6 prose-ol:text-gray-700 dark:prose-ol:text-gray-300 prose-ol:mb-6 prose-ol:marker:text-brand-indigo
               prose-strong:text-gray-900 dark:prose-strong:text-white
-              prose-a:text-brand-indigo hover:prose-a:underline
-              prose-img:rounded-lg prose-img:shadow-md prose-img:mx-auto prose-img:my-6"
+              prose-a:text-brand-indigo hover:prose-a:underline prose-a:font-medium
+              prose-img:rounded-lg prose-img:shadow-md prose-img:mx-auto prose-img:my-8 prose-img:max-w-full prose-img:h-auto"
                 dangerouslySetInnerHTML={{ __html: tutorial.content }}
               />
             </div>
@@ -648,7 +648,7 @@ export default function TutorialDetailPage({ params }: { params: { id: string } 
                         e.preventDefault()
                         handleScrollToHeading(heading.id)
                       }}
-                      className="text-gray-600 dark:text-gray-300 hover:text-brand-indigo dark:hover:text-brand-indigo-light transition-colors text-sm"
+                      className="text-gray-600 dark:text-gray-300 hover:text-brand-indigo dark:hover:text-brand-indigo-light transition-colors text-sm py-1 block"
                     >
                       {heading.text}
                     </a>
