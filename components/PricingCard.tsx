@@ -5,8 +5,6 @@ interface PricingCardProps {
   plan: PricingPlan
 }
 
-import { Button } from "@/components/ui/button"
-
 export default function PricingCard({ plan }: PricingCardProps) {
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("id-ID", {
@@ -20,11 +18,11 @@ export default function PricingCard({ plan }: PricingCardProps) {
   return (
     <div className="relative h-full flex flex-col mx-2 sm:mx-0">
       <div
-        className={`group flex-1 bg-white dark:bg-gray-800 rounded-2xl shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
+        className={`flex-1 bg-white dark:bg-gray-800 rounded-2xl shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${
           plan.popular
             ? "border-2 border-brand-indigo dark:border-brand-indigo-light"
             : "border border-gray-200 dark:border-gray-700"
-        } group-hover:scale-[1.01] group-hover:shadow-2xl`}
+        }`}
       >
         {plan.popular && (
           <div className="absolute -top-3 left-0 w-full flex justify-center">
@@ -45,7 +43,7 @@ export default function PricingCard({ plan }: PricingCardProps) {
           <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{plan.name}</h3>
           <div className="mb-1">
             <span
-              className={`text-2xl sm:text-3xl font-bold ${
+              className={`text-4xl font-extrabold ${
                 plan.popular
                   ? "bg-gradient-to-r from-brand-pink to-brand-indigo bg-clip-text text-transparent"
                   : "text-gray-900 dark:text-white"
@@ -54,6 +52,7 @@ export default function PricingCard({ plan }: PricingCardProps) {
               {formatPrice(plan.price)}
             </span>
           </div>
+          <p className="text-sm text-gray-500 dark:text-gray-400">/{plan.period}</p>
         </div>
 
         <div className="p-6 flex flex-col flex-1">
@@ -78,20 +77,11 @@ export default function PricingCard({ plan }: PricingCardProps) {
             ))}
           </ul>
 
-          <div className="text-center">
+          <div className="text-center mt-auto">
+            {" "}
+            {/* Use mt-auto to push to bottom */}
             <p className="text-sm text-gray-500 dark:text-gray-400">Pilih paket ini saat checkout</p>
           </div>
-        </div>
-        <div className="p-6 pt-0">
-          <Button
-            className={`w-full ${
-              plan.popular
-                ? "bg-gradient-to-r from-brand-pink to-brand-indigo hover:from-brand-pink/90 hover:to-brand-indigo/90 text-white"
-                : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-600"
-            }`}
-          >
-            Pilih Paket
-          </Button>
         </div>
       </div>
     </div>
