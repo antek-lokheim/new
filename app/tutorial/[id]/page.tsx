@@ -513,19 +513,23 @@ export default function TutorialDetailPage({ params }: { params: { id: string } 
             </Link>
 
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sm:p-8 border border-gray-200 dark:border-gray-700 mb-8">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="bg-brand-indigo-light dark:bg-brand-indigo/30 p-3 rounded-lg">
-                  <IconComponent className="w-6 h-6 text-brand-indigo dark:text-brand-indigo-light" />
+              <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-6 md:gap-8 mb-6">
+                <div className="flex items-center justify-center md:justify-start">
+                  <div className="bg-brand-indigo-light dark:bg-brand-indigo/30 p-4 rounded-xl flex-shrink-0">
+                    <IconComponent className="w-8 h-8 text-brand-indigo dark:text-brand-indigo-light" />
+                  </div>
                 </div>
                 <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-sm font-medium text-brand-indigo dark:text-brand-indigo-light bg-brand-indigo-light dark:bg-brand-indigo/30 px-2 py-1 rounded">
+                  <div className="flex flex-wrap items-center gap-3 mb-2">
+                    <span className="text-sm font-medium text-brand-indigo dark:text-brand-indigo-light bg-brand-indigo-light dark:bg-brand-indigo/30 px-3 py-1 rounded-full">
                       {tutorial.category}
                     </span>
                     <span className="text-sm text-gray-500 dark:text-gray-400">• {tutorial.time}</span>
                   </div>
-                  <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">{tutorial.title}</h1>
-                  <p className="text-gray-600 dark:text-gray-300 mt-2">{tutorial.description}</p>
+                  <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white leading-tight">
+                    {tutorial.title}
+                  </h1>
+                  <p className="text-gray-600 dark:text-gray-300 mt-2 text-base">{tutorial.description}</p>
                 </div>
               </div>
             </div>
@@ -535,14 +539,47 @@ export default function TutorialDetailPage({ params }: { params: { id: string } 
         <AnimatedSection animation="fade-up" delay={200}>
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div
-              className="prose prose-lg max-w-none p-6 sm:p-8 dark:prose-invert prose-headings:text-gray-900 dark:prose-headings:text-white prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-li:text-gray-700 dark:prose-li:text-gray-300 prose-strong:text-gray-900 dark:prose-strong:text-white"
+              className="prose prose-lg max-w-none p-6 sm:p-8 dark:prose-invert
+            prose-headings:text-gray-900 dark:prose-headings:text-white
+            prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:mb-4
+            prose-ul:text-gray-700 dark:prose-ul:text-gray-300 prose-ul:mb-4 prose-li:mb-2 prose-li:marker:text-brand-indigo
+            prose-ol:text-gray-700 dark:prose-ol:text-gray-300 prose-ol:mb-4 prose-ol:marker:text-brand-indigo
+            prose-strong:text-gray-900 dark:prose-strong:text-white
+            prose-a:text-brand-indigo hover:prose-a:underline"
               dangerouslySetInnerHTML={{ __html: tutorial.content }}
             />
           </div>
         </AnimatedSection>
 
+        <AnimatedSection animation="fade-up" delay={300}>
+          <div className="mt-8 flex justify-between items-center">
+            {tutorials[tutorials.findIndex((t) => t.id === params.id) - 1] ? (
+              <Link
+                href={`/tutorial/${tutorials[tutorials.findIndex((t) => t.id === params.id) - 1].id}`}
+                className="inline-flex items-center text-brand-indigo dark:text-brand-indigo-light hover:text-brand-indigo/90 dark:hover:text-brand-indigo-light/90"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Tutorial Sebelumnya
+              </Link>
+            ) : (
+              <div /> // Empty div to maintain spacing
+            )}
+            {tutorials[tutorials.findIndex((t) => t.id === params.id) + 1] ? (
+              <Link
+                href={`/tutorial/${tutorials[tutorials.findIndex((t) => t.id === params.id) + 1].id}`}
+                className="inline-flex items-center text-brand-indigo dark:text-brand-indigo-light hover:text-brand-indigo/90 dark:hover:text-brand-indigo-light/90"
+              >
+                Tutorial Berikutnya
+                <ArrowLeft className="w-4 h-4 ml-2 rotate-180" />
+              </Link>
+            ) : (
+              <div /> // Empty div to maintain spacing
+            )}
+          </div>
+        </AnimatedSection>
+
         <AnimatedSection animation="fade-up" delay={400}>
-          <div className="mt-12 text-center">
+          <div className="mt-12 text-center bg-gradient-to-r from-brand-pink-light to-brand-purple-light dark:from-brand-pink/10 dark:to-brand-purple/10 p-8 rounded-xl border border-gray-200 dark:border-gray-700">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Butuh Bantuan Lebih Lanjut?</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
               Jika Anda memiliki pertanyaan atau membutuhkan bantuan lebih lanjut, jangan ragu untuk menghubungi tim
